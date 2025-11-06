@@ -1,0 +1,87 @@
+import BrandLogoFill from "@/assets/brand/brand-filled.png";
+import { cn } from "@/lib/utils";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import InkButton from "../ui/InkButton";
+
+const NAVIGATION_ITEMS = [
+  {
+    label: "Pool Overview",
+    href: "/pool",
+    match: "pool",
+  },
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+    match: "dashboard",
+  },
+  {
+    label: "Activity Log & Rules",
+    href: "/log",
+    match: "log",
+  },
+  {
+    label: "Notifications",
+    href: "/notification",
+    match: "notification",
+  },
+];
+
+const demoUserName = "@kristy_krist";
+
+export default function Header() {
+  const location = useLocation().pathname.split("/");
+
+  return (
+    <>
+      <header className="sticky top-0 z-50 w-full bg-white">
+        <div className="container mx-auto p-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Left Side */}
+            <div className="flex items-center gap-4">
+              {/* Brand Logo */}
+              <img
+                src={BrandLogoFill}
+                alt="Logo"
+                className="size-[52px] object-contain"
+              />
+              {/* Navigation */}
+              <div className="flex items-center gap-4">
+                {NAVIGATION_ITEMS.map((item) => {
+                  const isActive = location.includes(item.match);
+                  return (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      className={cn(
+                        "text-sm font-medium text-gray-500 hover:text-gray-700 transition-all duration-300",
+                        isActive && "text-primary-400 font-bold",
+                        " py-2"
+                      )}
+                    >
+                      <span className="">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Right Side */}
+            <div className="flex gap-2 items-center">
+              <InkButton className="text-sm font-medium text-primary hover:text-primary-700 transition-colors duration-300">
+                Wellcome {demoUserName}
+              </InkButton>
+
+              <InkButton
+                variant="icon"
+                className="text-white hover:text-primary-200 transition-colors duration-300"
+                fillColor="#cca289"
+              >
+                <div className="text-lg mt-0.5 ml-0.25">X</div>
+              </InkButton>
+            </div>
+          </div>
+        </div>
+      </header>
+    </>
+  );
+}
