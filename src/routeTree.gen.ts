@@ -21,6 +21,7 @@ import { Route as AppPoolIndexRouteImport } from './routes/_app/pool/index'
 import { Route as AppNotificationIndexRouteImport } from './routes/_app/notification/index'
 import { Route as AppLogIndexRouteImport } from './routes/_app/log/index'
 import { Route as AppDashboardIndexRouteImport } from './routes/_app/dashboard/index'
+import { Route as AppPoolPoolIdIndexRouteImport } from './routes/_app/pool/$poolId/index'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/_onboarding',
@@ -79,6 +80,11 @@ const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
   path: '/dashboard/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPoolPoolIdIndexRoute = AppPoolPoolIdIndexRouteImport.update({
+  id: '/pool/$poolId/',
+  path: '/pool/$poolId/',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/policy': typeof CommonPolicyRoute
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/log': typeof AppLogIndexRoute
   '/notification': typeof AppNotificationIndexRoute
   '/pool': typeof AppPoolIndexRoute
+  '/pool/$poolId': typeof AppPoolPoolIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/policy': typeof CommonPolicyRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/log': typeof AppLogIndexRoute
   '/notification': typeof AppNotificationIndexRoute
   '/pool': typeof AppPoolIndexRoute
+  '/pool/$poolId': typeof AppPoolPoolIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/_app/log/': typeof AppLogIndexRoute
   '/_app/notification/': typeof AppNotificationIndexRoute
   '/_app/pool/': typeof AppPoolIndexRoute
+  '/_app/pool/$poolId/': typeof AppPoolPoolIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/log'
     | '/notification'
     | '/pool'
+    | '/pool/$poolId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/policy'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/log'
     | '/notification'
     | '/pool'
+    | '/pool/$poolId'
   id:
     | '__root__'
     | '/_app'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/_app/log/'
     | '/_app/notification/'
     | '/_app/pool/'
+    | '/_app/pool/$poolId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -248,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/pool/$poolId/': {
+      id: '/_app/pool/$poolId/'
+      path: '/pool/$poolId'
+      fullPath: '/pool/$poolId'
+      preLoaderRoute: typeof AppPoolPoolIdIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -256,6 +275,7 @@ interface AppRouteChildren {
   AppLogIndexRoute: typeof AppLogIndexRoute
   AppNotificationIndexRoute: typeof AppNotificationIndexRoute
   AppPoolIndexRoute: typeof AppPoolIndexRoute
+  AppPoolPoolIdIndexRoute: typeof AppPoolPoolIdIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -263,6 +283,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLogIndexRoute: AppLogIndexRoute,
   AppNotificationIndexRoute: AppNotificationIndexRoute,
   AppPoolIndexRoute: AppPoolIndexRoute,
+  AppPoolPoolIdIndexRoute: AppPoolPoolIdIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

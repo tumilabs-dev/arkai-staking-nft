@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import SplashInkTitle from "@/assets/objects/splash-ink.png";
 import Pool1 from "@/assets/pool/pool-1.png";
 import Pool2 from "@/assets/pool/pool-2.png";
@@ -89,6 +89,7 @@ function RouteComponent() {
 }
 
 function PoolCard({ pool }: { pool: (typeof demoPools)[0] }) {
+  const navigate = useNavigate();
   return (
     <div className="relative">
       {/* Decord */}
@@ -131,6 +132,12 @@ function PoolCard({ pool }: { pool: (typeof demoPools)[0] }) {
         <InkButton
           className="w-full text-white hover:text-primary-900 transition-all duration-300"
           fillColor="#afc1b1"
+          onClick={() =>
+            navigate({
+              to: "/pool/$poolId",
+              params: { poolId: pool.id.toString() },
+            })
+          }
         >
           Join Pool
         </InkButton>
