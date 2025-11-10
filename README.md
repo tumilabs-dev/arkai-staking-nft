@@ -1,4 +1,4 @@
-Welcome to your new TanStack app! 
+Welcome to your new TanStack Router + Vite app! 
 
 # Getting Started
 
@@ -6,7 +6,7 @@ To run this application:
 
 ```bash
 pnpm install
-pnpm start
+pnpm dev
 ```
 
 # Building For Production
