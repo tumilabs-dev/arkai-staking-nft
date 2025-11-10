@@ -7,7 +7,7 @@ export const islandIdleAnimation = (
 ) => {
   timeline.delay(random(0, 2)).to(sprite, {
     pixi: {
-      x: sprite.x + 2,
+      x: sprite.x + 5,
       y: sprite.y + 2,
     },
     duration: 1,

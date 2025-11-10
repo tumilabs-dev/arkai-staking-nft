@@ -3,6 +3,11 @@ import { LayerPositions } from "../../constants/LayerPosition.enum";
 import { PixiSpriteWithTexture } from "../commons/PixiSpriteWithTexture";
 
 import Checkpoint_Image from "@/assets/pool/maps/pool-1/shared/checkpoint.png";
+import Checkpoint_Checked from "@/assets/pool/maps/pool-1/shared/checkpoint-checked.png";
+import Checkpoint_Current from "@/assets/pool/maps/pool-1/shared/checkpoint-current.png";
+
+import Current_Point from "@/assets/pool/maps/pool-1/shared/current-point.png";
+
 import { particleEntryAnimation } from "../../animations/particleEntry.animation";
 
 import gsap from "gsap";
@@ -260,6 +265,8 @@ async function drawDashedLine(
   }
 }
 
+const currentPoint = 4;
+
 export default function Checkpoint() {
   // Center the points before generating spline
   const centeredPoints = checkpoint_positions.map((pos) => ({
@@ -276,10 +283,16 @@ export default function Checkpoint() {
           drawDashedLine(g, splinePoints, 20, 16);
         }}
       />
-      {checkpoint_positions.map((position, index, arr) => (
+      {checkpoint_positions.map((position, index) => (
         <PixiSpriteWithTexture
           key={`Position-${position.x}-${position.y}`}
-          asset={Checkpoint_Image}
+          asset={
+            index === currentPoint
+              ? Checkpoint_Current
+              : index < currentPoint
+              ? Checkpoint_Checked
+              : Checkpoint_Image
+          }
           x={position.x}
           y={position.y}
           zIndex={LayerPositions.GROUND}
@@ -290,6 +303,21 @@ export default function Checkpoint() {
           }
         />
       ))}
+      <PixiSpriteWithTexture
+        asset={Current_Point}
+        x={checkpoint_positions[currentPoint].x}
+        y={checkpoint_positions[currentPoint].y - 10}
+        zIndex={LayerPositions.GROUND}
+        interactive={true}
+        initAnimation={(timeline, sprite, onComplete) =>
+          particleEntryAnimation(
+            timeline,
+            sprite,
+            onComplete,
+            currentPoint * 0.1
+          )
+        }
+      />
     </>
   );
 }

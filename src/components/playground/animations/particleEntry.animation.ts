@@ -19,14 +19,14 @@ export const particleEntryAnimation = (
       pixi: {
         alpha: 1,
       },
-      duration: 0.3,
+      duration: 0.5,
       delay: delay ? delay + 1 : 1,
     })
     .from(
       sprite,
 
       {
-        duration: 0.5,
+        duration: 0.8,
         pixi: {
           y: y - 50,
         },
