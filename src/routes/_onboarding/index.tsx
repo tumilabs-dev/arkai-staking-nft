@@ -22,12 +22,12 @@ function RouteComponent() {
             className="size-[64px] object-contain"
           />
           <span className="text-lg uppercase font-medium text-white">
-            Arkai NFT Stacking
+            Arkai NFT Staking
           </span>
         </div>
         {/* Navigation */}
         <div className="flex items-center gap-2 cursor-pointer hover:gap-1 transition-all duration-300">
-          <span className="text-white">Stacking Rules</span>
+          <span className="text-white">Staking Rules</span>
           <ArrowIcon className="text-white mb-1.5" />
         </div>
       </div>

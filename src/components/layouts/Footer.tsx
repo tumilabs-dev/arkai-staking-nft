@@ -13,7 +13,7 @@ export default function Footer() {
         />
         {/* Copyright */}
         <p className="text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} Arkai NFT Stacking. All rights
+          &copy; {new Date().getFullYear()} Arkai NFT Staking. All rights
           reserved.
         </p>
       </div>
