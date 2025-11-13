@@ -1,5 +1,6 @@
 import { createRouter as createTanstackRouter } from "@tanstack/react-router";
 import * as TanstackQuery from "./integrations/tanstack-query/root-provider";
+import { WalletProvider } from "@razorlabs/razorkit";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
@@ -14,7 +15,7 @@ export const router = createTanstackRouter({
   Wrap: (props: { children: React.ReactNode }) => {
     return (
       <TanstackQuery.Provider {...rqContext}>
-        {props.children}
+        <WalletProvider autoConnect={true}>{props.children}</WalletProvider>
       </TanstackQuery.Provider>
     );
   },

@@ -1,0 +1,69 @@
+import axiosInstance from "@/integrations/axios";
+import { useWallet } from "@razorlabs/razorkit";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearch } from "@tanstack/react-router";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { useEffect } from "react";
+
+const authUrl =
+  "https://arkai-discord-bot-e3dclo-477199-103-252-93-65.traefik.me/auth/login";
+
+interface DiscordUser {
+  id: string;
+  global_name: string;
+  username: string;
+}
+
+export const useConnectDiscord = () => {
+  const { connected, address } = useWallet();
+  const [tokenRedirect, setTokenRedirect] = useLocalStorage<string | null>(
+    "arkai_token_redirect",
+    null
+  );
+  const queryKey = ["discordId", tokenRedirect];
+  const queryClient = useQueryClient();
+
+  //   Connect Discord function
+  const loginDiscord = async () => {
+    if (!connected || !address) return;
+    window.location.href = authUrl;
+  };
+
+  //   Search Param handle after return
+  const { token } = useSearch({
+    from: "/_onboarding/connect",
+  });
+  //    After redirect and get return param tokenId, check if it is valid
+  useEffect(() => {
+    if (token) {
+      setTokenRedirect(token);
+    }
+  }, [token]);
+
+  //   Get discordId through tokenRedirect
+  const { data, isLoading } = useQuery({
+    queryKey,
+    queryFn: async () => {
+      if (!tokenRedirect) return null;
+      const response = await axiosInstance.get<DiscordUser>(
+        `https://discord.com/api/users/@me`,
+        {
+          headers: { Authorization: `Bearer ${tokenRedirect}` },
+        }
+      );
+      return response.data as DiscordUser;
+    },
+
+    enabled: !!tokenRedirect,
+  });
+
+  // Handle disconnect discord
+  const disconnectDiscord = async () => {
+    if (!connected || !address) return;
+    setTokenRedirect(null);
+    queryClient.invalidateQueries({ queryKey });
+    window.location.search = "";
+  };
+
+  return { loginDiscord, discord: data, isLoading, disconnectDiscord };
+};

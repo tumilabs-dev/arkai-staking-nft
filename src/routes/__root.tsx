@@ -1,35 +1,21 @@
-import { TanStackDevtools } from "@tanstack/react-devtools";
-import {
-  Outlet,
-  createRootRouteWithContext,
-} from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 
-import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
-
+import { Toaster } from "@/components/ui/sonner";
 import Footer from "@/components/layouts/Footer";
-
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
 export const Route = createRootRouteWithContext()({
   component: RootComponent,
 });
+
+gsap.registerPlugin(useGSAP);
 
 function RootComponent() {
   return (
     <>
       <Outlet />
       <Footer />
-      {/* <TanStackDevtools
-        config={{
-          position: "bottom-center",
-        }}
-        plugins={[
-          {
-            name: "Tanstack Router",
-            render: <TanStackRouterDevtoolsPanel />,
-          },
-          TanStackQueryDevtools,
-        ]}
-      /> */}
+      <Toaster />
     </>
   );
 }
