@@ -22,8 +22,21 @@ import { useWallet } from "@razorlabs/razorkit";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { gsap } from "gsap";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { z } from "zod";
+
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/animate-ui/components/radix/alert-dialog";
+import { Check, X } from "lucide-react";
 
 export const Route = createFileRoute("/_onboarding/connect")({
   component: RouteComponent,
@@ -43,41 +56,99 @@ function RouteComponent() {
   const { connected } = useWallet();
   const { loginDiscord, discord, disconnectDiscord } = useConnectDiscord();
   // Check if wallet is connected and discord is linked
-  const { storageData } = useLoginWithWallet();
-  const { signAndBindDiscord, data: bindingData } = useSignAndBindDiscord();
+  const { storageData, isPending: isLoadingWallet } = useLoginWithWallet();
+  const {
+    signAndBindDiscord,
+    data: bindingData,
+    isPending: isLoadingBinding,
+  } = useSignAndBindDiscord();
 
   // Handle GSAP animations for discord and wallet connection
   useGSAP(
     () => {
       const timeline = gsap.timeline();
 
+      console.log(storageData, discord);
+
       // If wallet is not linked and discord is not connected
-      if (!storageData?.linked && !discord) {
-        timeline.to(".waitingToLink", { opacity: 0, duration: 1 });
-        timeline.to(".linkedDiscord", { opacity: 0, duration: 1 });
+      if (
+        (!storageData?.linked && !discord) ||
+        !connected ||
+        isLoadingWallet ||
+        isLoadingBinding
+      ) {
+        timeline.to(".waitingToLink", {
+          opacity: 0,
+          duration: 1,
+          display: "none",
+        });
+        timeline.to(".linkedDiscord", {
+          opacity: 0,
+          duration: 1,
+          display: "none",
+        });
+
+        return;
       }
 
       // If wallet is linked
       if (storageData?.linked) {
-        timeline.to(".waitingToLink", { opacity: 0, duration: 1 });
-        timeline.to(".linkedDiscord", { opacity: 1, duration: 1 });
+        timeline.to(".waitingToLink", {
+          opacity: 0,
+          duration: 1,
+          display: "none",
+        });
+        timeline.to(".linkedDiscord", {
+          opacity: 1,
+          duration: 1,
+          display: "block",
+        });
+
+        return;
       }
 
       // If wallet is not linked and discord is connected
       if (!storageData?.linked && discord) {
-        timeline.to(".waitingToLink", { opacity: 1, duration: 1 });
-        timeline.to(".linkedDiscord", { opacity: 0, duration: 1 });
+        timeline.to(".waitingToLink", {
+          opacity: 1,
+          duration: 1,
+          display: "block",
+        });
+        timeline.to(".linkedDiscord", {
+          opacity: 0,
+          duration: 1,
+          display: "none",
+        });
+
+        return;
       }
     },
     {
       scope: pageRef,
-      dependencies: [discord, storageData, bindingData],
+      dependencies: [
+        discord,
+        storageData,
+        bindingData,
+        isLoadingWallet,
+        isLoadingBinding,
+      ],
     }
   );
 
   // Render Discord Button if discord is connected
   const DiscordButton = () => {
-    if (!discord && !storageData)
+    const [isOpen, setIsOpen] = useState(false);
+
+    const onConfirm = () => {
+      setIsOpen(false);
+      disconnectDiscord();
+    };
+
+    const onCancel = () => {
+      setIsOpen(false);
+    };
+
+    if (!discord && !storageData?.linked)
       return (
         <InkButton
           className="mt-4 py-2 font-medium text-primary-500 hover:px-3 transition-all duration-300"
@@ -97,16 +168,47 @@ function RouteComponent() {
             <DiscordIcon className="size-4 object-cover" />
           </span>
         </InkButton>
-        <InkButton
-          variant="icon"
-          className={cn(
-            "text-white hover:text-primary-200 transition-colors duration-300 mt-4"
-          )}
-          fillColor="#cca289"
-          onClick={disconnectDiscord}
-        >
-          <div className="text-lg mt-0.5 ml-0.25">X</div>
-        </InkButton>
+        {discord?.username && (
+          <>
+            <InkButton
+              variant="icon"
+              className={cn(
+                "text-white hover:text-primary-200 transition-colors duration-300 mt-4"
+              )}
+              fillColor="#cca289"
+              onClick={() => setIsOpen(true)}
+            >
+              <div className="text-lg mt-0.5 ml-0.25">X</div>
+            </InkButton>
+          </>
+        )}
+        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+          <AlertDialogContent className="sm:max-w-[425px]">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Wanna disconnect?</AlertDialogTitle>
+              <AlertDialogDescription></AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="px-12">
+              <InkButton
+                fillColor="#A4C3AF"
+                variant="icon"
+                className="size-12"
+                onClick={onConfirm}
+              >
+                <Check className="size-10 text-white" />
+              </InkButton>
+
+              <InkButton
+                fillColor="#E49C85"
+                variant="icon"
+                className="size-12"
+                onClick={onCancel}
+              >
+                <X className="size-10 text-white" />
+              </InkButton>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     );
   };

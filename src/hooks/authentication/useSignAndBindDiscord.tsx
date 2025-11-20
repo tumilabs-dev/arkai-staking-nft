@@ -40,7 +40,11 @@ export const useSignAndBindDiscord = () => {
     null
   );
 
-  const { mutateAsync: signAndBindDiscord, data } = useMutation({
+  const {
+    mutateAsync: signAndBindDiscord,
+    data,
+    isPending,
+  } = useMutation({
     mutationFn: async () => {
       if (!address || !discord || !connected || !account) return;
       const nonce = Math.random().toString(36).substring(2, 15);
@@ -86,5 +90,5 @@ export const useSignAndBindDiscord = () => {
     },
   });
 
-  return { signAndBindDiscord, data };
+  return { signAndBindDiscord, data, isPending };
 };

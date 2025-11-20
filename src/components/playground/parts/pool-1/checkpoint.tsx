@@ -265,7 +265,7 @@ async function drawDashedLine(
   }
 }
 
-const currentPoint = 4;
+const currentPoint = 5;
 
 export default function Checkpoint() {
   // Center the points before generating spline
@@ -305,8 +305,8 @@ export default function Checkpoint() {
       ))}
       <PixiSpriteWithTexture
         asset={Current_Point}
-        x={checkpoint_positions[currentPoint].x}
-        y={checkpoint_positions[currentPoint].y - 10}
+        x={checkpoint_positions[currentPoint].x - 15}
+        y={checkpoint_positions[currentPoint].y - 30}
         zIndex={LayerPositions.GROUND}
         interactive={true}
         initAnimation={(timeline, sprite, onComplete) =>
@@ -314,7 +314,7 @@ export default function Checkpoint() {
             timeline,
             sprite,
             onComplete,
-            currentPoint * 0.1
+            currentPoint * 0.1 + 1
           )
         }
       />

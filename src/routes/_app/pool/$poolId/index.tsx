@@ -1,3 +1,4 @@
+import GameUI from "@/components/playground/gameUI/GameUI";
 import { PixiPlayground } from "@/components/playground/PixiPlayground";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -7,8 +8,11 @@ export const Route = createFileRoute("/_app/pool/$poolId/")({
 
 function RouteComponent() {
   return (
-    <div>
-      <PixiPlayground />
+    <div className="">
+      <div className="relative mx-auto container">
+        <PixiPlayground />
+        <GameUI />
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import BrandLogoFill from "@/assets/brand/brand-filled.png";
+import { useLoginWithWallet } from "@/hooks/authentication/useLoginWithWallet";
 import { cn } from "@/lib/utils";
-import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import InkButton from "../ui/InkButton";
 
 const NAVIGATION_ITEMS = [
@@ -26,10 +27,9 @@ const NAVIGATION_ITEMS = [
   },
 ];
 
-const demoUserName = "@kristy_krist";
-
 export default function Header() {
   const location = useLocation().pathname.split("/");
+  const { storageData } = useLoginWithWallet();
 
   return (
     <>
@@ -68,7 +68,7 @@ export default function Header() {
             {/* Right Side */}
             <div className="flex gap-2 items-center">
               <InkButton className="text-sm font-medium text-primary hover:text-primary-700 transition-colors duration-300">
-                Wellcome {demoUserName}
+                Wellcome @{storageData?.discordUsername}
               </InkButton>
 
               <InkButton

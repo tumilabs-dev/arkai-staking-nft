@@ -2,8 +2,6 @@ import SpiralPng from "@/assets/objects/spiral.png";
 import { cn } from "@/lib/utils";
 import { HTMLAttributes, ReactNode } from "react";
 
-type PatternSize = "sm" | "md" | "lg" | "xl" | number;
-
 interface SpiralPadPatternProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   color?: string;

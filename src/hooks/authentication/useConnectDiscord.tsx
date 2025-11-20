@@ -37,6 +37,8 @@ export const useConnectDiscord = () => {
   useEffect(() => {
     if (token) {
       setTokenRedirect(token);
+    } else {
+      setTokenRedirect(null);
     }
   }, [token]);
 

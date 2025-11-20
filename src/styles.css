@@ -65,7 +65,7 @@ code {
   --secondary-900: #2b4038;
 
   /* Background colors (shadcn defaults to 500) */
-  --background: oklch(1 0 0);
+  --background: #f8e3cf;
   --foreground: oklch(0.145 0 0);
 
   /* Primary colors (shadcn defaults to 500) */
@@ -81,7 +81,7 @@ code {
   --muted-foreground: oklch(0.556 0 0);
 
   /* Accent colors */
-  --accent: oklch(0.97 0 0);
+  --accent: #e8a849;
   --accent-foreground: oklch(0.205 0 0);
 
   /* Destructive colors */

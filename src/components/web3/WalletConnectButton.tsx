@@ -76,7 +76,6 @@ export const WalletConnectButton = ({
           reset();
         }}
       />
-      ,
     </>
   );
 };
