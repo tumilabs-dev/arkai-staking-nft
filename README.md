@@ -1,290 +1,214 @@
-Welcome to your new TanStack Router + Vite app! 
+# Arkai NFT Staking Platform
 
-# Getting Started
+A decentralized application (dApp) for staking Arkai NFTs on the Movement (Aptos) network. Earn rewards based on your Discord role tier and unlock exclusive staking pools.
 
-To run this application:
+## 🌟 Features
+
+- **NFT Staking**: Stake your Arkai NFTs to earn rewards
+- **Discord Role Integration**: Rewards are determined by your Discord role tier
+- **Tiered Rewards System**: 5 reward tiers based on NFT holdings (3, 6, 9, 12, 15 NFTs)
+- **Multiple Staking Pools**: Access different pools with unique requirements and rewards
+- **Wallet Integration**: Seamless connection with Movement/Aptos wallets via RazorKit
+- **Real-time Tracking**: Monitor your staking progress and rewards
+- **Interactive UI**: Beautiful, game-inspired interface built with Pixi.js and GSAP animations
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- pnpm (v10.20.0 or higher)
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd arkai-nft-stacking
+```
+
+1. Install dependencies:
 
 ```bash
 pnpm install
+```
+
+1. Set up environment variables: Create a `.env` file in the root directory with the following variables:
+
+```env
+VITE_MAINNET_RPC=your_movement_rpc_url
+VITE_MAINNET_CHAINID=your_chain_id
+VITE_MAINNET_INDEXER=your_indexer_url
+VITE_API_URL=your_api_url
+VITE_NFT_COLLECTION_ADDRESS=your_nft_collection_address
+```
+
+1. Start the development server:
+
+```bash
 pnpm dev
 ```
 
-# Building For Production
+The application will be available at `http://localhost:3000`
 
-To build this application for production:
+## 📦 Building for Production
+
+To build the application for production:
 
 ```bash
 pnpm build
 ```
 
-## Testing
+The production build will be generated in the `dist` directory.
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+## 🧪 Testing
+
+Run the test suite:
 
 ```bash
 pnpm test
 ```
 
-## Styling
+## 🏗️ Tech Stack
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+- **Frontend Framework**: React 19
+- **Routing**: TanStack Router (file-based routing)
+- **State Management**: TanStack Store & React Query
+- **Styling**: Tailwind CSS
+- **Blockchain**: Movement (Aptos) via RazorKit
+- **Animations**: GSAP & Motion
+- **Graphics**: Pixi.js for interactive game elements
+- **UI Components**: Radix UI, Base UI
+- **Build Tool**: Vite
+- **Type Safety**: TypeScript
 
+## 📁 Project Structure
 
-
-
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+```
+src/
+├── assets/           # Images and static assets
+├── components/       # Reusable React components
+│   ├── animate-ui/  # Animation components
+│   ├── icons/       # Icon components
+│   ├── layouts/     # Layout components (Header, Footer)
+│   ├── playground/  # Game UI components
+│   ├── ui/          # UI primitives
+│   └── web3/        # Web3-related components
+├── constants/       # App configuration and constants
+├── hooks/           # Custom React hooks
+│   ├── authentication/  # Auth-related hooks
+│   └── nfts/        # NFT-related hooks
+├── integrations/    # Third-party integrations
+│   ├── axios/       # HTTP client setup
+│   └── tanstack-query/  # React Query setup
+├── lib/             # Utility functions
+├── routes/          # TanStack Router routes
+│   ├── _app/        # Protected app routes
+│   ├── _common/     # Common routes
+│   └── _onboarding/ # Onboarding flow
+└── styles.css       # Global styles
 ```
 
-Then anywhere in your JSX you can use it like so:
+## 🎮 How It Works
 
-```tsx
-<Link to="/about">About</Link>
-```
+### 1\. Connect Wallet & Discord
 
-This will create a link that will navigate to the `/about` route.
+- Connect your Movement/Aptos wallet using RazorKit
+- Link your Discord account to verify your role
+- Sign a message to verify wallet ownership
 
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
+### 2\. NFT Verification
 
-### Using A Layout
+- The system checks your wallet for Arkai NFTs
+- Your NFT count determines your reward tier:
+  - **Tier 1**: 3 NFTs
+  - **Tier 2**: 6 NFTs
+  - **Tier 3**: 9 NFTs
+  - **Tier 4**: 12 NFTs
+  - **Tier 5**: 15 NFTs
 
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
+### 3\. Staking Pools
 
-Here is an example layout that includes a header:
+Access different staking pools based on your Discord role:
 
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+- **Whispering Woods**: For Ranger Guild Members
+- **Crimson Caverns**: For Knight Order Initiates
+- **Golden Fields**: For Archmage Council
+- **Sunken City**: For Mariner Fleet Captains
+- **Shadowfell Peaks**: For Shadow Rogue Initiates
 
-import { Link } from "@tanstack/react-router";
+### 4\. Earn Rewards
 
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
+- Stake your NFTs to start earning rewards
+- Rewards are calculated based on your tier and pool
+- Track your progress through the dashboard
 
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
+## 🔐 Authentication Flow
 
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
+1. User connects wallet via RazorKit
+2. User connects Discord account
+3. System generates a nonce and message for signing
+4. User signs the message with their wallet
+5. Backend verifies signature and Discord role
+6. User data is stored locally and synced with backend
 
+## 🌐 Environment Variables
 
-## Data Fetching
+| Variable | Description |
+| --- | --- |
+| `VITE_MAINNET_RPC` | Movement network RPC endpoint |
+| `VITE_MAINNET_CHAINID` | Movement network chain ID |
+| `VITE_MAINNET_INDEXER` | Movement network indexer URL |
+| `VITE_API_URL` | Backend API URL |
+| `VITE_NFT_COLLECTION_ADDRESS` | Arkai NFT collection address |
 
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
+## 📚 Key Dependencies
 
-For example:
+- `@razorlabs/razorkit` - Movement/Aptos wallet integration
+- `@aptos-labs/ts-sdk` - Aptos SDK for blockchain interactions
+- `@tanstack/react-router` - File-based routing
+- `@tanstack/react-query` - Server state management
+- `@tanstack/react-store` - Client state management
+- `pixi.js` - 2D WebGL renderer for game graphics
+- `gsap` - Animation library
+- `axios` - HTTP client
 
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
+## 🎨 Styling
 
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
+This project uses Tailwind CSS for styling. The design system includes:
 
-### React-Query
+- Custom color palette (primary, secondary, accent)
+- Responsive layouts
+- Custom animations and transitions
+- Game-inspired UI elements
 
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
+## 🔄 Routing
 
-First add your dependencies:
+This project uses TanStack Router with file-based routing. Routes are automatically generated from files in the `src/routes` directory:
 
-```bash
-pnpm add @tanstack/react-query @tanstack/react-query-devtools
-```
+- `_onboarding/` - Onboarding and connection flow
+- `_app/` - Main application routes (protected)
+- `_common/` - Common/shared routes
 
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
+## 📝 Scripts
 
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+- `pnpm dev` - Start development server (port 3000)
+- `pnpm build` - Build for production
+- `pnpm serve` - Preview production build
+- `pnpm test` - Run test suite
 
-// ...
+## 🔗 Links
 
-const queryClient = new QueryClient();
+- [Movement Network](https://movement.network)
+- [Aptos Documentation](https://aptos.dev)
+- [TanStack Router](https://tanstack.com/router)
+- [RazorKit](https://razorlabs.com)
 
-// ...
+## 💬 Support
 
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
+For support, join our Discord server or open an issue on GitHub.
 
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
-}
-```
+---
 
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from "@tanstack/react-query";
-
-import "./App.css";
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
-
-```bash
-pnpm add @tanstack/store
-```
-
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
-
-Let's check this out by doubling the count using derived state.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
-
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+Built with ❤️ for the Arkai community
