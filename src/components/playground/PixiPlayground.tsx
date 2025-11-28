@@ -1,12 +1,11 @@
 import { useGetMap } from "@/hooks/playground/useGetMap";
+import { useGSAP } from "@gsap/react";
 import { Application, extend } from "@pixi/react";
 import { useWindowSize } from "@uidotdev/usehooks";
+import gsap from "gsap";
 import { Container, Graphics, Sprite } from "pixi.js";
 import { useRef } from "react";
 import { PixiSpriteResolver } from "./parts/commons/PixiSpriteResolver";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import Island_01 from "./parts/pool-1/Island_01";
 import Checkpoint from "./parts/pool-1/checkpoint";
 // extend tells @pixi/react what Pixi.js components are available
 extend({
@@ -53,7 +52,7 @@ export function PixiPlayground() {
   if (isLoading) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-8 bg-background">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-8">
       <div className="relative" ref={containerRef}>
         {height && width && mapElements && (
           <Application
@@ -61,13 +60,12 @@ export function PixiPlayground() {
             height={canvasHeight}
             antialias
             bezierSmoothness={0.5}
-            backgroundColor={0xf3e0cb}
-            backgroundAlpha={1}
+            backgroundColor={"transparent"}
+            backgroundAlpha={0}
             autoDensity
             resizeTo={containerRef}
           >
             <pixiContainer
-              interactive
               scale={scale}
               x={-canvasWidth / 20}
               y={-canvasHeight / 20}

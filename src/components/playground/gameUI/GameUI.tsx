@@ -28,15 +28,12 @@ export default function GameUI() {
   );
 
   return (
-    <div
-      className="absolute top-0 left-0 w-full h-full flex-col"
-      ref={containerRef}
-    >
-      <h1 className="el text-4xl font-bold text-center py-8 text-muted-foreground">
+    <>
+      <h1 className="absolute top-0 left-0 w-full el text-4xl font-bold text-center py-8 text-muted-foreground">
         Your Staking Adventure Map
       </h1>
 
-      <div className="flex items-center justify-between px-2">
+      <div className="absolute top-32 left-0 w-full flex items-center justify-between px-2">
         {/* Pool Image */}
         <div className="el relative w-[200px] flex flex-col items-center justify-center mt-28">
           <img
@@ -88,6 +85,6 @@ export default function GameUI() {
           Claim all gifts
         </InkButton>
       </div>
-    </div>
+    </>
   );
 }

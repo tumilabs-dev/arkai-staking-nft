@@ -1,15 +1,9 @@
-import { PixiReactElementProps } from "@pixi/react";
-import * as PIXI from "pixi.js";
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
-import { SpriteAnimation } from "../../constants/SpriteAnimation.enum";
-import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { PixiReactElementProps } from "@pixi/react";
+import { gsap } from "gsap";
+import * as PIXI from "pixi.js";
+import { useEffect, useRef, useState } from "react";
+import { SpriteAnimation } from "../../constants/SpriteAnimation.enum";
 
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { particleInteractAnimation } from "../../animations/particleInteract.animation";
@@ -108,7 +102,6 @@ export const PixiSpriteWithTexture = ({
       return;
 
     const timeline = gsap.timeline();
-    console.log("initAnimation", initAnimation);
 
     initAnimation?.(timeline, spriteRef.current, () => {
       setAnimation(SpriteAnimation.IDLE);
@@ -141,7 +134,8 @@ export const PixiSpriteWithTexture = ({
   }, [animation, props, texture, endAnimation]);
 
   // Handle Interact Animation
-  const handleInteract = contextSafe(() => {
+  const handleInteract = () => {
+    console.log("isInteractable", isInteractable);
     if (!isInteractable) return;
     if (!spriteRef.current || !texture) return;
 
@@ -156,16 +150,19 @@ export const PixiSpriteWithTexture = ({
         duration: 0.1,
       });
     }
-  });
+  };
 
   return (
     <pixiSprite
       {...props}
-      interactive={isInteractable}
+      interactive={true}
       texture={texture}
       visible={!!texture}
       ref={spriteRef}
-      onClick={handleInteract}
+      onClick={() => {
+        handleInteract();
+      }}
+      cursor="pointer"
     />
   );
 };

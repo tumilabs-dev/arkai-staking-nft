@@ -433,7 +433,7 @@ export default function Checkpoint() {
               alpha: 1,
               y: lastCheckpoint.y + lastCheckpoint.height / 2 + 15,
             },
-            duration: 1.5,
+            duration: 5,
             ease: "power2.out",
           }
         );
@@ -473,20 +473,21 @@ export default function Checkpoint() {
         ref={graphicsRef}
       />
       {checkpoint_positions.map((position, index) => (
-        <PixiSpriteWithTexture
-          key={`Position-${index}`}
-          asset={
-            index === safeCurrentPoint
-              ? Checkpoint_Current
-              : index < safeCurrentPoint
-              ? Checkpoint_Checked
-              : Checkpoint_Image
-          }
-          x={position.x}
-          y={position.y}
-          zIndex={LayerPositions.GROUND}
-          interactive={true}
-        />
+        <>
+          <PixiSpriteWithTexture
+            key={`Position-${index}`}
+            asset={
+              index === safeCurrentPoint
+                ? Checkpoint_Current
+                : index < safeCurrentPoint
+                ? Checkpoint_Checked
+                : Checkpoint_Image
+            }
+            x={position.x}
+            y={position.y}
+            zIndex={LayerPositions.GROUND}
+          />
+        </>
       ))}
       {checkpoint_positions[safeCurrentPoint] && (
         <PixiSpriteWithTexture
@@ -498,7 +499,6 @@ export default function Checkpoint() {
           }
           y={checkpoint_positions[safeCurrentPoint].y + 5}
           zIndex={LayerPositions.GROUND}
-          interactive={true}
           initAnimation={(timeline, sprite, onComplete) =>
             particleEntryAnimation(
               timeline,

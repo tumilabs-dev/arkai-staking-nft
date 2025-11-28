@@ -1,5 +1,4 @@
 import * as PIXI from "pixi.js";
-import gsap from "gsap";
 
 export const particleEntryAnimation = (
   timeline: gsap.core.Timeline,
