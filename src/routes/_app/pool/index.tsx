@@ -1,14 +1,27 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import SplashInkTitle from "@/assets/objects/splash-ink.png";
 import Pool1 from "@/assets/pool/pool-1.png";
 import Pool2 from "@/assets/pool/pool-2.png";
 import Pool3 from "@/assets/pool/pool-3.png";
 import Pool4 from "@/assets/pool/pool-4.png";
 import Pool5 from "@/assets/pool/pool-5.png";
-import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
-import { UserIcon } from "@/components/icons/user.icon";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/animate-ui/components/radix/alert-dialog";
 import { RewardIcon } from "@/components/icons/reward.icon";
+import { UserIcon } from "@/components/icons/user.icon";
 import InkButton from "@/components/ui/InkButton";
+import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
+import { rolesMap } from "@/constants/rolesMap";
+import { IPool, useGetStakingPools } from "@/hooks/pools/useGetPools";
+import { useJoinPool } from "@/hooks/pools/useJoinPool";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Check, Loader2, XIcon } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_app/pool/")({
   component: RouteComponent,
@@ -63,6 +76,8 @@ const demoPools = [
 ];
 
 function RouteComponent() {
+  const { data, isLoading } = useGetStakingPools();
+  console.log(data);
   return (
     <div className="bg-background min-h-screen">
       <div className="container mx-auto px-4 relative py-6 space-y-6">
@@ -79,23 +94,74 @@ function RouteComponent() {
         </div>
         {/* Pools */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {demoPools.map((pool) => (
-            <PoolCard key={pool.id} pool={pool} />
-          ))}
+          {isLoading ? (
+            <div className="flex items-center justify-center col-span-full h-screen">
+              <Loader2 className="w-6 h-6 text-primary-900 animate-spin" />
+            </div>
+          ) : (
+            data?.map((pool) => <PoolCard key={pool.id} pool={pool} />)
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function PoolCard({ pool }: { pool: (typeof demoPools)[0] }) {
+function PoolCard({ pool }: { pool: IPool }) {
   const navigate = useNavigate();
+  const { mutateAsync: joinPool } = useJoinPool();
+  const { data: pools } = useGetStakingPools();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Is the first pool to join
+  const anyPoolJoined = pools?.some((p) => p.isJoined) ?? false;
+
+  const PoolActionButton = () => {
+    if (pool.isJoined) {
+      return (
+        <InkButton
+          className="w-full text-white hover:text-primary-900 transition-all duration-300"
+          fillColor="#dd993e"
+          onClick={async () => {
+            await navigate({
+              to: "/pool/$poolId",
+              params: { poolId: pool.id.toString() },
+            });
+          }}
+        >
+          Detail
+        </InkButton>
+      );
+    }
+    if (!pool.canJoin) {
+      return (
+        <InkButton
+          className="w-full text-black hover:text-primary-900 transition-all duration-300"
+          fillColor="#f3e0cb"
+          disabled
+        >
+          Not Available
+        </InkButton>
+      );
+    }
+    return (
+      <InkButton
+        className="w-full text-white hover:text-primary-900 transition-all duration-300"
+        fillColor="#afc1b1"
+        onClick={async () => {
+          setIsOpen(true);
+        }}
+      >
+        {anyPoolJoined ? "Switch Pool" : "Join Pool"}
+      </InkButton>
+    );
+  };
   return (
     <div className="relative">
       {/* Decord */}
       <SpiralPadPattern color="#A46A37" size={30} className="w-full mb-1" />
       {/* Image */}
-      <img src={pool.image} alt={pool.name} />
+      <img src={demoPools[pool.requiredNftCount - 1].image} alt={pool.name} />
 
       {/* Content */}
       <div className="bg-white w-full p-6 space-y-6">
@@ -112,7 +178,11 @@ function PoolCard({ pool }: { pool: (typeof demoPools)[0] }) {
             Required Role:
           </span>
           <span className="text-muted-foreground max-w-[60%] text-right">
-            {pool.requiredRole}
+            {
+              rolesMap[
+                pool.requiredNftCount.toString() as keyof typeof rolesMap
+              ]
+            }
           </span>
         </div>
 
@@ -123,24 +193,56 @@ function PoolCard({ pool }: { pool: (typeof demoPools)[0] }) {
             Reward:
           </span>
           <span className="text-muted-foreground max-w-[60%] text-right">
-            {pool.reward}
+            {demoPools[pool.requiredNftCount - 1].reward}
           </span>
         </div>
 
         {/* Join pool */}
-
-        <InkButton
-          className="w-full text-white hover:text-primary-900 transition-all duration-300"
-          fillColor="#afc1b1"
-          onClick={() =>
-            navigate({
-              to: "/pool/$poolId",
-              params: { poolId: pool.id.toString() },
-            })
-          }
-        >
-          Join Pool
-        </InkButton>
+        <PoolActionButton />
+        {/* Pool Join  */}
+        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                {anyPoolJoined
+                  ? "Switch Pool Confirmation"
+                  : "Join Pool Confirmation"}
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogDescription className="text-center">
+              {anyPoolJoined
+                ? "Are you sure you want to switch to this pool? Other pools will be disabled."
+                : "Are you sure you want to join this pool? Other pools will be disabled."}
+              {anyPoolJoined && (
+                <p className="text-destructive text-sm">
+                  You will be switched to the new pool. Your current pool
+                  progress will be lost.
+                </p>
+              )}
+            </AlertDialogDescription>
+            <AlertDialogFooter>
+              <InkButton
+                className="size-10 text-white hover:text-primary-900 transition-all duration-300"
+                fillColor="#E49C85"
+                variant="icon"
+                onClick={() => setIsOpen(false)}
+              >
+                <XIcon className="w-4 h-4" />
+              </InkButton>
+              <InkButton
+                className="size-10 text-white hover:text-primary-900 transition-all duration-300"
+                fillColor="#afc1b1"
+                variant="icon"
+                onClick={async () => {
+                  await joinPool(pool.id);
+                  setIsOpen(false);
+                }}
+              >
+                <Check className="w-4 h-4" />
+              </InkButton>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
       <SpiralPadPattern color="#A46A37" size={30} className="w-full mt-1" />
     </div>

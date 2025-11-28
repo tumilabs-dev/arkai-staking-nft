@@ -1,12 +1,11 @@
+import { appConfig } from "@/constants/appConfig";
 import axiosInstance from "@/integrations/axios";
+import { endpoint } from "@/integrations/axios/endpoint";
 import { useWallet } from "@razorlabs/razorkit";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useEffect } from "react";
-
-const authUrl =
-  "https://arkai-discord-bot-e3dclo-477199-103-252-93-65.traefik.me/auth/login";
 
 interface DiscordUser {
   id: string;
@@ -26,7 +25,7 @@ export const useConnectDiscord = () => {
   //   Connect Discord function
   const loginDiscord = async () => {
     if (!connected || !address) return;
-    window.location.href = authUrl;
+    window.location.href = appConfig.api.url + endpoint.auth.discordLogin;
   };
 
   //   Search Param handle after return

@@ -1,12 +1,13 @@
+import { useGetMap } from "@/hooks/playground/useGetMap";
 import { Application, extend } from "@pixi/react";
-import { Container, Graphics, Sprite } from "pixi.js";
-import Island_01 from "./parts/pool-1/Island_01";
-import Island_02 from "./parts/pool-1/Island_02";
-import Island_03 from "./parts/pool-1/Island_03";
-import Checkpoint from "./parts/pool-1/checkpoint";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { Container, Graphics, Sprite } from "pixi.js";
 import { useRef } from "react";
-
+import { PixiSpriteResolver } from "./parts/commons/PixiSpriteResolver";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import Island_01 from "./parts/pool-1/Island_01";
+import Checkpoint from "./parts/pool-1/checkpoint";
 // extend tells @pixi/react what Pixi.js components are available
 extend({
   Container,
@@ -26,17 +27,44 @@ export function PixiPlayground() {
   const canvasHeight = CANVAS_DESIGNED_EDGE * scale;
   const canvasWidth = CANVAS_DESIGNED_EDGE * scale;
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const { data: mapElements, isLoading } = useGetMap();
+
+  useGSAP(
+    () => {
+      if (isLoading) return;
+      if (!containerRef.current) return;
+      gsap.fromTo(
+        containerRef.current,
+        {
+          opacity: 0,
+        },
+        {
+          opacity: 1,
+        }
+      );
+    },
+    {
+      scope: containerRef,
+      dependencies: [isLoading],
+    }
+  );
+
+  if (isLoading) return null;
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-8 bg-background">
       <div className="relative" ref={containerRef}>
-        {height && width && (
+        {height && width && mapElements && (
           <Application
             width={canvasWidth}
             height={canvasHeight}
-            backgroundColor={0xf0e4d2}
             antialias
             bezierSmoothness={0.5}
+            backgroundColor={0xf3e0cb}
+            backgroundAlpha={1}
             autoDensity
+            resizeTo={containerRef}
           >
             <pixiContainer
               interactive
@@ -44,9 +72,13 @@ export function PixiPlayground() {
               x={-canvasWidth / 20}
               y={-canvasHeight / 20}
             >
-              <Island_02 />
-              <Island_03 />
-              <Island_01 />
+              {mapElements.map((element, index) => (
+                <PixiSpriteResolver
+                  key={`${element.asset}-${index}`}
+                  mapElement={element}
+                />
+              ))}
+
               <Checkpoint />
             </pixiContainer>
           </Application>

@@ -1,6 +1,12 @@
 import { PixiReactElementProps } from "@pixi/react";
 import * as PIXI from "pixi.js";
-import { useEffect, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { SpriteAnimation } from "../../constants/SpriteAnimation.enum";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -11,42 +17,39 @@ import { particleInteractAnimation } from "../../animations/particleInteract.ani
 gsap.registerPlugin(useGSAP, PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
 
+export type PixiCustomAnimation = (
+  timeline: gsap.core.Timeline,
+  sprite: PIXI.Sprite,
+  onComplete?: () => void,
+  delay?: number,
+  y?: number
+) => void;
+
 interface PixiSpriteWithTextureProps
   extends PixiReactElementProps<typeof PIXI.Sprite> {
   asset: string;
   zIndex: number;
   isInteractable?: boolean;
-  initAnimation?: (
-    timeline: gsap.core.Timeline,
-    sprite: PIXI.Sprite,
-    onComplete?: () => void
-  ) => void;
-  idleAnimation?: (
-    timeline: gsap.core.Timeline,
-    sprite: PIXI.Sprite,
-    onComplete?: () => void
-  ) => void;
-  endAnimation?: (
-    timeline: gsap.core.Timeline,
-    sprite: PIXI.Sprite,
-    onComplete?: () => void
-  ) => void;
+  initAnimation?: PixiCustomAnimation;
+  idleAnimation?: PixiCustomAnimation;
+  endAnimation?: PixiCustomAnimation;
 }
 
-export function PixiSpriteWithTexture({
+export const PixiSpriteWithTexture = ({
   asset,
   initAnimation,
   idleAnimation,
   endAnimation,
   isInteractable = true,
   ...props
-}: PixiSpriteWithTextureProps) {
+}: PixiSpriteWithTextureProps) => {
   // Texture
   const [texture, setTexture] = useState<PIXI.Texture | undefined>(undefined);
   const [textureSize, setTextureSize] = useState<{
     width: number;
     height: number;
   }>({ width: 0, height: 0 });
+
   const spriteRef = useRef<PIXI.Sprite>(null);
 
   useEffect(() => {
@@ -58,7 +61,7 @@ export function PixiSpriteWithTexture({
         setTextureSize({ width: result.width, height: result.height });
       }
     });
-  }, [asset, textureSize]);
+  }, [asset, textureSize, texture, props]);
 
   // Set anchor to center after texture is loaded and sprite has dimensions
   useGSAP(() => {
@@ -105,11 +108,12 @@ export function PixiSpriteWithTexture({
       return;
 
     const timeline = gsap.timeline();
+    console.log("initAnimation", initAnimation);
 
     initAnimation?.(timeline, spriteRef.current, () => {
       setAnimation(SpriteAnimation.IDLE);
     });
-  }, [animation, props.x, props.y, texture, initAnimation, spriteRef.current]);
+  }, [animation, props]);
 
   // Handle Idle Animation
   useGSAP(() => {
@@ -125,7 +129,7 @@ export function PixiSpriteWithTexture({
 
     const timeline = gsap.timeline();
     idleAnimation?.(timeline, spriteRef.current);
-  }, [animation, props.x, props.y, texture, idleAnimation, spriteRef.current]);
+  }, [animation, props, texture, idleAnimation]);
 
   // Handle End Animation
   useGSAP(() => {
@@ -134,7 +138,7 @@ export function PixiSpriteWithTexture({
 
     const timeline = gsap.timeline();
     endAnimation?.(timeline, spriteRef.current);
-  }, [animation, props.x, props.y, texture, endAnimation, spriteRef.current]);
+  }, [animation, props, texture, endAnimation]);
 
   // Handle Interact Animation
   const handleInteract = contextSafe(() => {
@@ -164,4 +168,4 @@ export function PixiSpriteWithTexture({
       onClick={handleInteract}
     />
   );
-}
+};

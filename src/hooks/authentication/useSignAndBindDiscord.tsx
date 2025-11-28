@@ -7,6 +7,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { AxiosResponse } from "axios";
 import { WalletLoginResponse } from "./useLoginWithWallet";
+import { endpoint } from "@/integrations/axios/endpoint";
+
 interface ConnectWalletDto {
   discordId: string;
 
@@ -66,7 +68,7 @@ export const useSignAndBindDiscord = () => {
       const response = await axiosInstance.post<
         ConnectWalletDto,
         AxiosResponse<VerifyWalletDto>
-      >(`/auth/verify`, {
+      >(endpoint.auth.verify, {
         walletAddress: address,
         walletPublicKey: convertUint8ToHexString(
           Uint8Array.from(account.publicKey)

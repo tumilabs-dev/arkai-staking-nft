@@ -11,27 +11,6 @@ import { islandIdleAnimation } from "../../animations/islandIdle.animation";
 import { islandEntryAnimation } from "../../animations/islandEntry.animation";
 import { particleEntryAnimation } from "../../animations/particleEntry.animation";
 
-const trees = [
-  {
-    id: "tree-1",
-    asset: Island_Trees,
-    x: 79.87,
-    y: 492.36,
-  },
-  {
-    id: "tree-2",
-    asset: Island_Trees_2,
-    x: 226.85,
-    y: 420.35,
-  },
-  {
-    id: "tree-3",
-    asset: Island_Trees_3,
-    x: 130.6,
-    y: 416.11,
-  },
-];
-
 export default function Island_03() {
   return (
     <>
@@ -63,19 +42,36 @@ export default function Island_03() {
       />
 
       {/* Trees */}
-      {trees.map((tree, index) => (
-        <PixiSpriteWithTexture
-          key={tree.id}
-          asset={tree.asset}
-          x={tree.x}
-          y={tree.y}
-          zIndex={LayerPositions.GROUND}
-          visible={true}
-          initAnimation={(timeline, sprite, onComplete) =>
-            particleEntryAnimation(timeline, sprite, onComplete, index * 0.1)
-          }
-        />
-      ))}
+      <PixiSpriteWithTexture
+        asset={Island_Trees}
+        x={79.87}
+        y={492.36}
+        zIndex={LayerPositions.GROUND}
+        visible={true}
+        initAnimation={(timeline, sprite, onComplete) =>
+          particleEntryAnimation(timeline, sprite, onComplete)
+        }
+      />
+      <PixiSpriteWithTexture
+        asset={Island_Trees_2}
+        x={226.85}
+        y={420.35}
+        zIndex={LayerPositions.GROUND}
+        visible={true}
+        initAnimation={(timeline, sprite, onComplete) =>
+          particleEntryAnimation(timeline, sprite, onComplete)
+        }
+      />
+      <PixiSpriteWithTexture
+        asset={Island_Trees_3}
+        x={130.6}
+        y={416.11}
+        zIndex={LayerPositions.GROUND}
+        visible={true}
+        initAnimation={(timeline, sprite, onComplete) =>
+          particleEntryAnimation(timeline, sprite, onComplete)
+        }
+      />
 
       {/* Lighthouse */}
       <PixiSpriteWithTexture

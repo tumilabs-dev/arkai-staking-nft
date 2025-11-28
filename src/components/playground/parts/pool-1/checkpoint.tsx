@@ -7,93 +7,113 @@ import Checkpoint_Checked from "@/assets/pool/maps/pool-1/shared/checkpoint-chec
 import Checkpoint_Current from "@/assets/pool/maps/pool-1/shared/checkpoint-current.png";
 
 import Current_Point from "@/assets/pool/maps/pool-1/shared/current-point.png";
-
-import { particleEntryAnimation } from "../../animations/particleEntry.animation";
-
 import gsap from "gsap";
+import { particleEntryAnimation } from "../../animations/particleEntry.animation";
+import { useGSAP } from "@gsap/react";
+import { useMemo, useRef } from "react";
+import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
+import { useGetPoolRewards } from "@/hooks/pools/useGetPoolRewards";
 
-const checkpoint_positions = [
-  { x: 880, y: 872.63, width: 62, height: 63 },
-  { x: 783.5, y: 728.89, width: 62, height: 63 },
-  { x: 604.58, y: 793.59, width: 62, height: 63 },
-  { x: 417.74, y: 840.34, width: 62, height: 63 },
-  { x: 324.74, y: 684.07, width: 62, height: 63 },
-  { x: 504.28, y: 595.32, width: 62, height: 63 },
-  { x: 709.65, y: 613.04, width: 62, height: 63 },
-  { x: 856.33, y: 513.39, width: 62, height: 63 },
-  { x: 773.03, y: 343.65, width: 62, height: 63 },
-  { x: 589.64, y: 340.62, width: 62, height: 63 },
-  { x: 394.21, y: 378.83, width: 62, height: 63 },
-  { x: 300.61, y: 234.77, width: 62, height: 63 },
-];
+// First checkpoint position (manually provided)
+const FIRST_CHECKPOINT_POSITION = {
+  x: 900.61,
+  y: 872.77,
+  width: 62,
+  height: 63,
+};
+
+// SVG path data from Checkpoint_Path - the main path (4th path element)
+const Checkpoint_Path =
+  "M555.052 641.556C566.718 593.889 570.051 498.056 490.051 496.056C390.051 493.556 366.551 514.556 309.051 562.056C251.551 609.556 195.051 631.556 120.051 611.056C45.0515 590.556 20.5515 536.556 29.5515 451.556C38.5515 366.556 178.552 356.056 209.052 363.556C233.452 369.556 355.552 377.056 413.552 380.056C450.218 381.056 531.452 361.056 563.052 273.056C602.552 163.056 429.552 28.0556 294.552 104.056C159.552 180.056 -17.9483 179.056 2.05167 0.055542";
 
 /**
- * Catmull-Rom spline interpolation
- * @param p0 First control point
- * @param p1 Second control point (start)
- * @param p2 Third control point (end)
- * @param p3 Fourth control point
- * @param t Interpolation parameter (0 to 1)
- * @returns Interpolated point
+ * Parse SVG path and convert to points array
+ * Handles M (move to) and C (cubic bezier) commands
  */
-function catmullRom(
+function parseSvgPath(
+  pathData: string,
+  segmentsPerCurve: number = 20
+): { x: number; y: number }[] {
+  const points: { x: number; y: number }[] = [];
+  const commands = pathData.match(/[MCL][^MCL]*/g) || [];
+
+  let currentX = 0;
+  let currentY = 0;
+
+  for (const command of commands) {
+    const type = command[0];
+    const coords = command
+      .slice(1)
+      .trim()
+      .split(/[\s,]+/)
+      .map(Number)
+      .filter((n) => !isNaN(n));
+
+    if (type === "M") {
+      // Move to
+      currentX = coords[0];
+      currentY = coords[1];
+      points.push({ x: currentX, y: currentY });
+    } else if (type === "C") {
+      // Cubic Bezier curve: C x1 y1 x2 y2 x y
+      // Each C command has 6 numbers (3 coordinate pairs)
+      for (let i = 0; i < coords.length; i += 6) {
+        const x1 = coords[i];
+        const y1 = coords[i + 1];
+        const x2 = coords[i + 2];
+        const y2 = coords[i + 3];
+        const x = coords[i + 4];
+        const y = coords[i + 5];
+
+        // Generate points along the bezier curve
+        for (let j = 0; j <= segmentsPerCurve; j++) {
+          const t = j / segmentsPerCurve;
+          const point = bezierPoint(
+            { x: currentX, y: currentY },
+            { x: x1, y: y1 },
+            { x: x2, y: y2 },
+            { x, y },
+            t
+          );
+          points.push(point);
+        }
+
+        currentX = x;
+        currentY = y;
+      }
+    } else if (type === "L") {
+      // Line to
+      for (let i = 0; i < coords.length; i += 2) {
+        currentX = coords[i];
+        currentY = coords[i + 1];
+        points.push({ x: currentX, y: currentY });
+      }
+    }
+  }
+
+  return points;
+}
+
+/**
+ * Calculate a point on a cubic Bezier curve
+ */
+function bezierPoint(
   p0: { x: number; y: number },
   p1: { x: number; y: number },
   p2: { x: number; y: number },
   p3: { x: number; y: number },
   t: number
 ): { x: number; y: number } {
+  const mt = 1 - t;
+  const mt2 = mt * mt;
+  const mt3 = mt2 * mt;
   const t2 = t * t;
   const t3 = t2 * t;
 
   return {
-    x:
-      0.5 *
-      (2 * p1.x +
-        (-p0.x + p2.x) * t +
-        (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 +
-        (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
-    y:
-      0.5 *
-      (2 * p1.y +
-        (-p0.y + p2.y) * t +
-        (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 +
-        (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3),
+    x: mt3 * p0.x + 3 * mt2 * t * p1.x + 3 * mt * t2 * p2.x + t3 * p3.x,
+    y: mt3 * p0.y + 3 * mt2 * t * p1.y + 3 * mt * t2 * p2.y + t3 * p3.y,
   };
-}
-
-/**
- * Generate smooth curve points using Catmull-Rom spline
- */
-function generateSplinePoints(
-  points: { x: number; y: number }[],
-  segmentsPerCurve: number = 20
-): { x: number; y: number }[] {
-  if (points.length < 2) return points;
-  if (points.length === 2) return points;
-
-  const splinePoints: { x: number; y: number }[] = [];
-
-  for (let i = 0; i < points.length - 1; i++) {
-    // Get control points for Catmull-Rom
-    const p0 = i > 0 ? points[i - 1] : points[i];
-    const p1 = points[i];
-    const p2 = points[i + 1];
-    const p3 = i < points.length - 2 ? points[i + 2] : points[i + 1];
-
-    // Generate points along the curve
-    // For all segments except the last, exclude the final point (t=1) to avoid duplicates
-    const isLastSegment = i === points.length - 2;
-    const maxJ = isLastSegment ? segmentsPerCurve : segmentsPerCurve - 1;
-
-    for (let j = 0; j <= maxJ; j++) {
-      const t = j / segmentsPerCurve;
-      const point = catmullRom(p0, p1, p2, p3, t);
-      splinePoints.push(point);
-    }
-  }
-
-  return splinePoints;
 }
 
 /**
@@ -146,7 +166,150 @@ function getPathLength(points: { x: number; y: number }[]): number {
 }
 
 /**
- * Draw a dashed line with rounded dashes through points
+ * Find the closest point on the path to a target coordinate
+ * Returns the distance along the path to the closest point
+ */
+function findClosestPointOnPath(
+  points: { x: number; y: number }[],
+  targetPoint: { x: number; y: number }
+): { distance: number; point: { x: number; y: number } } {
+  let minDistance = Infinity;
+  let closestDistanceAlongPath = 0;
+  let closestPoint = points[0];
+  let accumulatedDistance = 0;
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const start = points[i];
+    const end = points[i + 1];
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const segmentLength = Math.sqrt(dx * dx + dy * dy);
+
+    if (segmentLength === 0) continue;
+
+    // Find the closest point on this segment to the target
+    const toStart = {
+      x: targetPoint.x - start.x,
+      y: targetPoint.y - start.y,
+    };
+    const segmentDir = { x: dx, y: dy };
+    const segmentLengthSq = segmentLength * segmentLength;
+    const t = Math.max(
+      0,
+      Math.min(
+        1,
+        (toStart.x * segmentDir.x + toStart.y * segmentDir.y) / segmentLengthSq
+      )
+    );
+
+    const pointOnSegment = {
+      x: start.x + dx * t,
+      y: start.y + dy * t,
+    };
+
+    const distanceToTarget = Math.sqrt(
+      Math.pow(targetPoint.x - pointOnSegment.x, 2) +
+        Math.pow(targetPoint.y - pointOnSegment.y, 2)
+    );
+
+    if (distanceToTarget < minDistance) {
+      minDistance = distanceToTarget;
+      closestDistanceAlongPath = accumulatedDistance + segmentLength * t;
+      closestPoint = pointOnSegment;
+    }
+
+    accumulatedDistance += segmentLength;
+  }
+
+  return {
+    distance: closestDistanceAlongPath,
+    point: closestPoint,
+  };
+}
+
+/**
+ * Calculate evenly spaced checkpoint positions along the path
+ * First checkpoint is at the closest point to firstPoint, remaining checkpoints
+ * are evenly spaced from that point to the end of the path
+ */
+function calculateCheckpointPositions(
+  pathPoints: { x: number; y: number }[],
+  firstPoint: { x: number; y: number },
+  totalCheckpoints: number,
+  width: number = 62,
+  height: number = 63
+): { x: number; y: number; width: number; height: number }[] {
+  if (pathPoints.length < 2) {
+    return [];
+  }
+
+  // Find the closest point on the path to the first checkpoint position
+  const { distance: firstCheckpointDistance } = findClosestPointOnPath(
+    pathPoints,
+    firstPoint
+  );
+
+  // Get the total path length
+  const totalPathLength = getPathLength(pathPoints);
+
+  // Calculate the remaining path length from first checkpoint to end
+  const remainingPathLength = totalPathLength - firstCheckpointDistance;
+
+  // Handle edge case: if path is too short or first point is at/near the end
+  if (remainingPathLength <= 0 || totalCheckpoints < 1) {
+    // Return just the first checkpoint
+    const firstPointOnPath = getPointAtDistance(
+      pathPoints,
+      firstCheckpointDistance
+    );
+    if (!firstPointOnPath) {
+      return [];
+    }
+    return [
+      {
+        x: firstPointOnPath.x - width / 2,
+        y: firstPointOnPath.y - height / 2,
+        width,
+        height,
+      },
+    ];
+  }
+
+  const positions: { x: number; y: number; width: number; height: number }[] =
+    [];
+
+  // Calculate positions for all checkpoints
+  for (let i = 0; i < totalCheckpoints; i++) {
+    let distanceAlongPath: number;
+
+    if (i === 0) {
+      // First checkpoint at the closest point to the provided position
+      distanceAlongPath = firstCheckpointDistance;
+    } else if (i === totalCheckpoints - 1) {
+      // Last checkpoint exactly at the end of the path
+      distanceAlongPath = totalPathLength;
+    } else {
+      // Evenly spaced checkpoints between first and last
+      const segmentLength = remainingPathLength / (totalCheckpoints - 1);
+      distanceAlongPath = firstCheckpointDistance + segmentLength * i;
+    }
+
+    const point = getPointAtDistance(pathPoints, distanceAlongPath);
+    if (point) {
+      positions.push({
+        x: point.x - width / 2,
+        y: point.y - height / 2,
+        width,
+        height,
+      });
+    }
+  }
+
+  return positions;
+}
+
+/**
+ * Draw a dashed line through points
  */
 async function drawDashedLine(
   graphics: Graphics,
@@ -157,14 +320,12 @@ async function drawDashedLine(
 ) {
   if (points.length < 2) return;
 
-  graphics.clear();
+  // graphics.clear();
+  // graphics.lineStyle(lineWidth, 0xffffff, 1);
 
   const totalLength = getPathLength(points);
   let currentDistance = 0;
   let isDrawing = true;
-  const radius = lineWidth / 2;
-
-  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   while (currentDistance < totalLength) {
     if (isDrawing) {
@@ -190,134 +351,165 @@ async function drawDashedLine(
       }
 
       if (dashPoints.length >= 2) {
-        // Draw the dash as a rounded path following the curve
-        const startPoint = dashPoints[0];
-        const endPoint = dashPoints[dashPoints.length - 1];
-        const startAngle = startPoint.angle;
-        const endAngle = endPoint.angle;
-
-        // Calculate perpendicular angles for the caps
-        const startPerpTop = startAngle + Math.PI;
-        const startPerpBottom = startAngle - Math.PI;
-        const endPerpTop = endAngle + Math.PI / 2;
-        const endPerpBottom = endAngle - Math.PI / 2;
-
-        // Start at the top of the start cap
-        const startTopX = startPoint.x + Math.cos(startPerpTop) * radius;
-        const startTopY = startPoint.y + Math.sin(startPerpTop) * radius;
-        graphics.moveTo(startTopX, startTopY);
-
-        // Draw rounded start cap (top half)
-        graphics.arc(
-          startPoint.x,
-          startPoint.y,
-          radius,
-          startPerpTop,
-          startPerpBottom,
-          true
-        );
-
-        // Draw the top side following the curve
+        // Draw the dash
+        graphics.moveTo(dashPoints[0].x, dashPoints[0].y);
         for (let i = 1; i < dashPoints.length; i++) {
-          const p = dashPoints[i];
-          const perp = p.angle + Math.PI / 2;
-          const topX = p.x + Math.cos(perp) * radius;
-          const topY = p.y + Math.sin(perp) * radius;
-          graphics.lineTo(topX, topY);
+          graphics.lineTo(dashPoints[i].x, dashPoints[i].y);
         }
-
-        // Draw rounded end cap (top half)
-        graphics.arc(
-          endPoint.x,
-          endPoint.y,
-          radius,
-          endPerpTop,
-          endPerpBottom,
-          true
-        );
-
-        // Draw the bottom side back following the curve
-        for (let i = dashPoints.length - 2; i >= 0; i--) {
-          const p = dashPoints[i];
-          const perp = p.angle - Math.PI / 2;
-          const bottomX = p.x + Math.cos(perp) * radius;
-          const bottomY = p.y + Math.sin(perp) * radius;
-          graphics.lineTo(bottomX, bottomY);
-        }
-
-        graphics.closePath();
       }
 
       currentDistance += dashLength;
-
-      await gsap.to(graphics, {
-        fill: "#ffffff",
-        duration: 0.02,
-        ease: "power2.out",
-      });
-
       isDrawing = false;
     } else {
       // Skip the gap
       currentDistance += gapLength;
       isDrawing = true;
+      // graphics.closePath();
     }
   }
+  graphics.fill("#ffffff").stroke({
+    color: "#ffffff",
+    width: lineWidth,
+    cap: "round",
+  });
+  // .setSize(585.52, 669.99);
 }
 
-const currentPoint = 5;
-
 export default function Checkpoint() {
-  // Center the points before generating spline
-  const centeredPoints = checkpoint_positions.map((pos) => ({
-    x: pos.x + pos.width / 2,
-    y: pos.y + pos.height / 2,
-  }));
-  const splinePoints = generateSplinePoints(centeredPoints, 120);
+  // Parse the SVG path from Checkpoint_Path
+  const pathPoints = parseSvgPath(Checkpoint_Path, 20);
+
+  // Get All the rewards for the current pool
+  const { data: currentPool, isLoading: isCurrentPoolLoading } =
+    useGetCurrentPool();
+  const { data: poolRewards, isLoading: isPoolRewardsLoading } =
+    useGetPoolRewards({
+      poolId: currentPool?.poolId,
+    });
+  console.log(poolRewards);
+
+  // Calculate checkpoint positions dynamically based on the path
+  const checkpoint_positions = calculateCheckpointPositions(
+    pathPoints,
+    FIRST_CHECKPOINT_POSITION,
+    poolRewards?.length ?? 0
+  );
+
+  // Ensure currentPoint is within valid bounds
+  const safeCurrentPoint = useMemo(() => {
+    const lastFalseIndex = poolRewards?.findIndex((reward) => !reward.canClaim);
+    if (lastFalseIndex === -1) return (poolRewards?.length ?? 0) - 1;
+    if (lastFalseIndex === 0) return 0;
+    return (lastFalseIndex ?? 0) - 1;
+  }, [poolRewards]);
+
+  const lastCheckpoint = checkpoint_positions.at(-1) ?? {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  };
+
+  const graphicsRef = useRef<Graphics>(null);
+
+  useGSAP(
+    () => {
+      if (isCurrentPoolLoading || isPoolRewardsLoading) return;
+      if (!graphicsRef.current) return;
+      if (!poolRewards?.length) return;
+      gsap.context(() => {
+        gsap.fromTo(
+          graphicsRef.current,
+          {
+            pixi: {
+              alpha: 0,
+              y: lastCheckpoint.y + lastCheckpoint.height / 2 - 15,
+            },
+            duration: 1.5,
+            ease: "power2.out",
+          },
+          {
+            pixi: {
+              alpha: 1,
+              y: lastCheckpoint.y + lastCheckpoint.height / 2 + 15,
+            },
+            duration: 1.5,
+            ease: "power2.out",
+          }
+        );
+      });
+    },
+    {
+      scope: graphicsRef,
+      dependencies: [
+        pathPoints,
+        poolRewards?.length,
+        lastCheckpoint,
+        isCurrentPoolLoading,
+        isPoolRewardsLoading,
+      ],
+    }
+  );
+
+  if (
+    isCurrentPoolLoading ||
+    isPoolRewardsLoading ||
+    !checkpoint_positions.length ||
+    safeCurrentPoint === -1
+  )
+    return null;
 
   return (
-    <>
+    <pixiContainer
+      zIndex={LayerPositions.GROUND}
+      visible={true}
+      x={300.61 + 62 / 2}
+      y={234.77 + 63 / 2}
+    >
       <pixiGraphics
-        zIndex={LayerPositions.GROUND}
         draw={(g: Graphics) => {
-          drawDashedLine(g, splinePoints, 20, 16);
+          drawDashedLine(g, pathPoints, 45, 45);
         }}
+        ref={graphicsRef}
       />
       {checkpoint_positions.map((position, index) => (
         <PixiSpriteWithTexture
-          key={`Position-${position.x}-${position.y}`}
+          key={`Position-${index}`}
           asset={
-            index === currentPoint
+            index === safeCurrentPoint
               ? Checkpoint_Current
-              : index < currentPoint
+              : index < safeCurrentPoint
               ? Checkpoint_Checked
               : Checkpoint_Image
           }
           x={position.x}
           y={position.y}
           zIndex={LayerPositions.GROUND}
-          visible={true}
           interactive={true}
-          initAnimation={(timeline, sprite, onComplete) =>
-            particleEntryAnimation(timeline, sprite, onComplete, index * 0.1)
-          }
         />
       ))}
-      <PixiSpriteWithTexture
-        asset={Current_Point}
-        x={checkpoint_positions[currentPoint].x - 15}
-        y={checkpoint_positions[currentPoint].y - 30}
-        zIndex={LayerPositions.GROUND}
-        interactive={true}
-        initAnimation={(timeline, sprite, onComplete) =>
-          particleEntryAnimation(
-            timeline,
-            sprite,
-            onComplete,
-            currentPoint * 0.1 + 1
-          )
-        }
-      />
-    </>
+      {checkpoint_positions[safeCurrentPoint] && (
+        <PixiSpriteWithTexture
+          asset={Current_Point}
+          x={
+            checkpoint_positions[safeCurrentPoint].x +
+            checkpoint_positions[safeCurrentPoint].width / 2 -
+            3
+          }
+          y={checkpoint_positions[safeCurrentPoint].y + 5}
+          zIndex={LayerPositions.GROUND}
+          interactive={true}
+          initAnimation={(timeline, sprite, onComplete) =>
+            particleEntryAnimation(
+              timeline,
+              sprite,
+              onComplete,
+              safeCurrentPoint * 0.1 + 1
+            )
+          }
+          anchor={{ x: 0.5, y: 0.5 }}
+        />
+      )}
+    </pixiContainer>
   );
 }

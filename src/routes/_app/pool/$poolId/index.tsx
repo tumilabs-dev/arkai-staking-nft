@@ -4,6 +4,10 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_app/pool/$poolId/")({
   component: RouteComponent,
+  loader: async ({ params }) => {
+    const { poolId } = params;
+    return { poolId };
+  },
 });
 
 function RouteComponent() {

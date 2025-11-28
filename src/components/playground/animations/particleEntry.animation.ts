@@ -1,12 +1,15 @@
 import * as PIXI from "pixi.js";
+import gsap from "gsap";
 
 export const particleEntryAnimation = (
   timeline: gsap.core.Timeline,
   sprite: PIXI.Sprite,
   onComplete?: () => void,
-  delay?: number
+  delay?: number,
+  y?: number
 ) => {
-  const y = sprite.y;
+  console.log("y", y);
+  console.log("sprite.y", sprite.y);
 
   timeline
     .set(sprite, {
@@ -28,7 +31,7 @@ export const particleEntryAnimation = (
       {
         duration: 0.8,
         pixi: {
-          y: y - 50,
+          y: sprite.y - 5,
         },
         onComplete: () => {
           onComplete?.();

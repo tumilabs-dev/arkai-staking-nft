@@ -4,20 +4,30 @@ export const islandEntryAnimation = (
   timeline: gsap.core.Timeline,
   sprite: PIXI.Sprite,
   onComplete?: () => void,
-  delay?: number
+  delay?: number,
+  y?: number
 ) => {
-  const y = sprite.y;
-
-  timeline.from(sprite, {
-    pixi: {
-      alpha: 0,
-      y: y + 10,
+  console.log("y", y);
+  console.log("sprite.y", sprite.y);
+  timeline.fromTo(
+    sprite,
+    {
+      pixi: {
+        alpha: 0,
+        y: sprite.y - 10,
+      },
     },
-    duration: 1,
-    ease: "fade.in",
-    delay: delay ?? 0,
-    onComplete: () => {
-      onComplete?.();
+    {
+      pixi: {
+        alpha: 1,
+        y: sprite.y,
+      },
+      duration: 1,
+      ease: "ease.inOut",
+      onComplete: () => {
+        onComplete?.();
+      },
     },
-  });
+    delay ?? 0
+  );
 };

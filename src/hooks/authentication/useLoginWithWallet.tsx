@@ -5,6 +5,8 @@ import convertUint8ToHexString from "@/lib/convertUint8ArrayToHex";
 import { useMutation } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { AxiosResponse } from "axios";
+import { endpoint } from "@/integrations/axios/endpoint";
+import { useTokenManager } from "./useTokenManager";
 
 interface WalletLogin {
   walletAddress: string;
@@ -15,16 +17,24 @@ interface WalletLogin {
 
 export interface WalletLoginResponse {
   linked: boolean;
+
   discordId: string | null;
   discordUsername: string;
   walletAddress: string;
+
   nftCount: number;
   roleTier: number;
+
   lastSyncedAt: string;
+
+  accessToken: string;
+  refreshToken: string;
 }
 
 export const useLoginWithWallet = () => {
   const { connected, address, signMessage, account } = useWallet();
+
+  const { setTokenAfterLogin } = useTokenManager();
 
   const [loginData, setLoginData] = useLocalStorage<WalletLoginResponse | null>(
     "arkai-wallet-login",
@@ -56,7 +66,7 @@ export const useLoginWithWallet = () => {
       const response = await axiosInstance.post<
         WalletLogin,
         AxiosResponse<WalletLoginResponse>
-      >(`/auth/wallet-login`, {
+      >(endpoint.auth.walletLogin, {
         walletAddress: address,
         walletPublicKey: convertUint8ToHexString(
           Uint8Array.from(account.publicKey)
@@ -64,6 +74,10 @@ export const useLoginWithWallet = () => {
         signature: signedMessage.args.signature.toString(),
         message: signedMessage.args.fullMessage,
       });
+
+      if (response.status !== 201) return;
+      setTokenAfterLogin(response.data.accessToken, response.data.refreshToken);
+
       setLoginData(response.data);
       return response.data;
     },

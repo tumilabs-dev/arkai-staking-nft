@@ -1,0 +1,762 @@
+[
+  {
+    "asset": "/maps/pool-1/island/island-1/island.png",
+    "x": 147.14,
+    "y": 197.41,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": false,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/shadow-1.png",
+    "x": 127.43,
+    "y": 185.79,
+    "index": 3,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": "islandIdleAnimation",
+    "isInteractable": false,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/shadow-2.png",
+    "x": 121.18,
+    "y": 178.34,
+    "index": 1,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": "islandIdleAnimation",
+    "isInteractable": false,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/mountain-1.png",
+    "x": 365.67,
+    "y": 176.2,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/mountain-2.png",
+    "x": 644.84,
+    "y": 286.71,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/mountain-2.png",
+    "x": 676.5,
+    "y": 391.16,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/mountain-3.png",
+    "x": 612.64,
+    "y": 528.16,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-1.png",
+    "x": 345.5,
+    "y": 195.81,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-3.png",
+    "x": 929.04,
+    "y": 340.18,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-1.png",
+    "x": 403.98,
+    "y": 508.7,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-1.png",
+    "x": 589.65,
+    "y": 576.41,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-root.png",
+    "x": 900.85,
+    "y": 409.9,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-12.png",
+    "x": 332.87,
+    "y": 613.11,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-13.png",
+    "x": 308.29,
+    "y": 621.7,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/pond-1.png",
+    "x": 605.31,
+    "y": 233,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-3.png",
+    "x": 654.77,
+    "y": 259.11,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/pond-2.png",
+    "x": 450.25,
+    "y": 769.7,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-4.png",
+    "x": 557.98,
+    "y": 729.96,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-3.png",
+    "x": 463.03,
+    "y": 807.92,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/pond-3.png",
+    "x": 590.33,
+    "y": 872.71,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/tend-tree-1.png",
+    "x": 475,
+    "y": 166.28,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/tend-tree-2.png",
+    "x": 495.58,
+    "y": 117,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/tend-tree-3.png",
+    "x": 605.67,
+    "y": 154.62,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-1.png",
+    "x": 485.63,
+    "y": 180.24,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-2.png",
+    "x": 575.57,
+    "y": 178.64,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/tend.png",
+    "x": 498,
+    "y": 161,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-3.png",
+    "x": 484.2,
+    "y": 243.73,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-4.png",
+    "x": 567.89,
+    "y": 244.24,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/fish-rack.png",
+    "x": 555.32,
+    "y": 262.25,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-5.png",
+    "x": 400.71,
+    "y": 258.75,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-8.png",
+    "x": 450.49,
+    "y": 277.08,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-6.png",
+    "x": 400.848,
+    "y": 279.78,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-7.png",
+    "x": 498.6,
+    "y": 278.13,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-8.png",
+    "x": 400.53,
+    "y": 321.9,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bone.png",
+    "x": 425.23,
+    "y": 296.62,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-9.png",
+    "x": 450.71,
+    "y": 332.32,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-1.png",
+    "x": 468.7,
+    "y": 423.57,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-3.png",
+    "x": 616.77,
+    "y": 434.18,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-1.png",
+    "x": 445.7,
+    "y": 461.32,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-3.png",
+    "x": 627.38,
+    "y": 473.81,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/temple.png",
+    "x": 452,
+    "y": 409,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-root.png",
+    "x": 483.68,
+    "y": 564.78,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-11.png",
+    "x": 688.8,
+    "y": 439.23,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/statue-1.png",
+    "x": 740.24,
+    "y": 456.32,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/statue-2.png",
+    "x": 790.87,
+    "y": 413,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-3.png",
+    "x": 819.97,
+    "y": 464.02,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/statue-3.png",
+    "x": 781.77,
+    "y": 476.52,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/statue-4.png",
+    "x": 782.61,
+    "y": 520.77,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/statue-5.png",
+    "x": 825.66,
+    "y": 513.48,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-10.png",
+    "x": 455.77,
+    "y": 652.5,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-11.png",
+    "x": 391.73,
+    "y": 684.56,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-11.png",
+    "x": 503.92,
+    "y": 688.04,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/voodoo-1.png",
+    "x": 454.77,
+    "y": 667.24,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/voodoo-2.png",
+    "x": 443.59,
+    "y": 719.78,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/arkai-statue.png",
+    "x": 846.87,
+    "y": 533.96,
+    "index": 10,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/cart.png",
+    "x": 208.85,
+    "y": 680.79,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/cactus-1.png",
+    "x": 226.29,
+    "y": 772.62,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/cactus-2.png",
+    "x": 238.28,
+    "y": 759.41,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/cactus-3.png",
+    "x": 194.17,
+    "y": 802.65,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/cactus-4.png",
+    "x": 257.32,
+    "y": 822.38,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-11.png",
+    "x": 681.2,
+    "y": 804.23,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-11.png",
+    "x": 755.08,
+    "y": 787.12,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bush-11.png",
+    "x": 780.35,
+    "y": 870.79,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/cave.png",
+    "x": 719.32,
+    "y": 783.51,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/rock.png",
+    "x": 784.74,
+    "y": 878.18,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/rock.png",
+    "x": 677.99,
+    "y": 848.01,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-1/bridge.png",
+    "x": 966.15,
+    "y": 703.98,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-2/island.png",
+    "x": 974.2,
+    "y": 754.39,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": false,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-2/shadow.png",
+    "x": 967.94,
+    "y": 751.59,
+    "index": 1,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": "islandIdleAnimation",
+    "isInteractable": false,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-3.png",
+    "x": 1046.74,
+    "y": 706.44,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-3/island.png",
+    "x": 82.64,
+    "y": 457.44,
+    "index": 5,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": false,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-3/shadow.png",
+    "x": 75.51,
+    "y": 454.17,
+    "index": 1,
+    "initAnimation": "islandEntryAnimation",
+    "idleAnimation": "islandIdleAnimation",
+    "isInteractable": false,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-1.png",
+    "x": 79.87,
+    "y": 492.36,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-2.png",
+    "x": 226.85,
+    "y": 420.35,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/shared/tree-3.png",
+    "x": 130.6,
+    "y": 416.11,
+    "index": 5,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  },
+  {
+    "asset": "/maps/pool-1/island/island-3/lighthouse.png",
+    "x": 177.74,
+    "y": 395.08,
+    "index": 10,
+    "initAnimation": "particleEntryAnimation",
+    "idleAnimation": null,
+    "isInteractable": null,
+    "scale": 1
+  }
+]
