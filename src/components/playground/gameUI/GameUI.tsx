@@ -2,16 +2,18 @@ import ScrollBg from "@/assets/objects/paper-scroll.png";
 import PoolImage from "@/assets/pool/pool-1-image.png";
 import InkButton from "@/components/ui/InkButton";
 import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
+import { useClaimRewards } from "@/hooks/pools/useClaimRewards";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef } from "react";
 
 const arkaiStaked = 1250;
-export default function GameUI() {
+export default function GameUI({ poolId }: { poolId: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
+      if (!containerRef.current) return;
       const timeline = gsap.timeline();
       const elements = gsap.utils.toArray(".el");
       timeline.from(elements, {
@@ -26,6 +28,10 @@ export default function GameUI() {
       scope: containerRef,
     }
   );
+
+  const { mutateAsync: claimRewards } = useClaimRewards({
+    poolId,
+  });
 
   return (
     <>
@@ -79,6 +85,9 @@ export default function GameUI() {
         <InkButton
           className="w-1/2 text-white text-xl hover:brightness-150 transition-all duration-300"
           fillColor="#50352C"
+          onClick={() => {
+            claimRewards();
+          }}
         >
           Claim all gifts
         </InkButton>

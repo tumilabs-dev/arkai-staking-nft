@@ -5,6 +5,13 @@ import { useTokenManager } from "../authentication/useTokenManager";
 import { useQuery } from "@tanstack/react-query";
 import { IPool } from "./useGetPools";
 
+export interface ICurrentPool {
+  id: string;
+  poolId: string;
+  isActive: boolean;
+  pool: IPool;
+}
+
 export const useGetCurrentPool = () => {
   const { headerBuilder, accessToken, AuthenticationErrorHandler } =
     useTokenManager();
@@ -13,7 +20,7 @@ export const useGetCurrentPool = () => {
     queryKey: currentQueryKey,
     queryFn: async () => {
       try {
-        const response = await axiosInstance.get<IPool>(
+        const response = await axiosInstance.get<ICurrentPool>(
           endpoint.staking.getCurrentPool,
           {
             headers: headerBuilder,

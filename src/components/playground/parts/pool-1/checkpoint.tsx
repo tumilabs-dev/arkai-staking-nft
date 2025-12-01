@@ -2,20 +2,26 @@ import { Container, Graphics, TextStyle } from "pixi.js";
 import { LayerPositions } from "../../constants/LayerPosition.enum";
 import { PixiSpriteWithTexture } from "../commons/PixiSpriteWithTexture";
 
-import Checkpoint_Image from "@/assets/pool/maps/pool-1/shared/checkpoint.png";
 import Checkpoint_Checked from "@/assets/pool/maps/pool-1/shared/checkpoint-checked.png";
 import Checkpoint_Current from "@/assets/pool/maps/pool-1/shared/checkpoint-current.png";
-
-import Current_Point from "@/assets/pool/maps/pool-1/shared/current-point.png";
-import gsap from "gsap";
-import { particleEntryAnimation } from "../../animations/particleEntry.animation";
-import { useGSAP } from "@gsap/react";
-import { useMemo, useRef, useState } from "react";
-import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
-import { useGetPoolRewards } from "@/hooks/pools/useGetPoolRewards";
+import Checkpoint_Image from "@/assets/pool/maps/pool-1/shared/checkpoint.png";
 
 import PaperScroll from "@/assets/objects/paper-scroll.png";
-import { IPoolReward } from "@/hooks/pools/useGetPoolRewards";
+import Current_Point from "@/assets/pool/maps/pool-1/shared/current-point.png";
+import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
+import {
+  ERewardType,
+  IPoolReward,
+  useGetPoolRewards,
+} from "@/hooks/pools/useGetPoolRewards";
+import { parseValueToDisplay } from "@/lib/parseValue";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useMemo, useRef, useState } from "react";
+import { particleEntryAnimation } from "../../animations/particleEntry.animation";
+
+import Treasure_Closed from "@/assets/objects/treasure-close.png";
+import Treasure_Open from "@/assets/objects/treasure-open.png";
 
 // First checkpoint position (manually provided)
 const FIRST_CHECKPOINT_POSITION = {
@@ -385,33 +391,33 @@ export default function Checkpoint() {
   // Get All the rewards for the current pool
   const { data: currentPool, isLoading: isCurrentPoolLoading } =
     useGetCurrentPool();
-  const { data: poolRewards, isLoading: isPoolRewardsLoading } =
+  const { data: poolReward, isLoading: isPoolRewardsLoading } =
     useGetPoolRewards({
       poolId: currentPool?.poolId,
     });
-  console.log(poolRewards);
 
   // Calculate checkpoint positions dynamically based on the path
+  const allWeeks = Array.from(
+    new Set(poolReward?.rewards?.map((reward) => reward.weekNumber))
+  );
+
   const checkpoint_positions = calculateCheckpointPositions(
     pathPoints,
     FIRST_CHECKPOINT_POSITION,
-    poolRewards?.length ?? 0
+    allWeeks.length ?? 0
   );
 
   // Ensure currentPoint is within valid bounds
   const safeCurrentPoint = useMemo(() => {
-    const lastFalseIndex = poolRewards?.findIndex((reward) => !reward.canClaim);
-    if (lastFalseIndex === -1) return (poolRewards?.length ?? 0) - 1;
-    if (lastFalseIndex === 0) return 0;
-    return (lastFalseIndex ?? 0) - 1;
-  }, [poolRewards]);
+    if ((poolReward?.weekHeld ?? 0) === 0) return 0;
+    for (let i = 0; i < allWeeks.length; i++) {
+      if (allWeeks[i] === poolReward?.weekHeld) return i;
+      if (allWeeks[i] < (poolReward?.weekHeld ?? 0)) continue;
+    }
+    return allWeeks.length - 1;
+  }, [poolReward, allWeeks]);
 
-  const lastCheckpoint = checkpoint_positions.at(-1) ?? {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  };
+  const lastCheckpoint = checkpoint_positions.at(-1);
 
   const graphicsRef = useRef<Graphics>(null);
 
@@ -419,7 +425,8 @@ export default function Checkpoint() {
     () => {
       if (isCurrentPoolLoading || isPoolRewardsLoading) return;
       if (!graphicsRef.current) return;
-      if (!poolRewards?.length) return;
+      if (!poolReward?.rewards?.length) return;
+      if (!lastCheckpoint) return;
       gsap.context(() => {
         gsap.fromTo(
           graphicsRef.current,
@@ -446,7 +453,7 @@ export default function Checkpoint() {
       scope: graphicsRef,
       dependencies: [
         pathPoints,
-        poolRewards?.length,
+        poolReward?.rewards?.length,
         lastCheckpoint,
         isCurrentPoolLoading,
         isPoolRewardsLoading,
@@ -478,10 +485,14 @@ export default function Checkpoint() {
       {checkpoint_positions.map((position, index) => (
         <CheckpointItem
           key={`Position-${index}`}
-          canClaim={poolRewards?.[index]?.canClaim ?? false}
+          canClaim={safeCurrentPoint >= index}
           position={position}
           isCurrentPoint={index === safeCurrentPoint}
-          reward={poolRewards?.[index]?.reward ?? undefined}
+          rewards={
+            poolReward?.rewards?.filter(
+              (reward) => allWeeks[index] === reward.weekNumber
+            ) ?? []
+          }
         />
       ))}
     </pixiContainer>
@@ -492,13 +503,14 @@ export function CheckpointItem({
   canClaim,
   position,
   isCurrentPoint = false,
-  reward,
+  rewards,
 }: {
   canClaim: boolean;
   position: { x: number; y: number; width: number; height: number };
   isCurrentPoint?: boolean;
-  reward?: IPoolReward["reward"];
+  rewards?: IPoolReward["rewards"];
 }) {
+  console.log(rewards);
   const containerRef = useRef<Container>(null);
   const [isOpenDetail, setIsOpenDetail] = useState(false);
 
@@ -532,6 +544,26 @@ export function CheckpointItem({
         });
       }
     }, containerRef);
+  };
+
+  const handleHover = (isHover: boolean) => {
+    if (isHover) {
+      gsap.to(containerRef.current, {
+        pixi: {
+          scale: 1.1,
+        },
+        duration: 0.2,
+        ease: "power2.in",
+      });
+    } else {
+      gsap.to(containerRef.current, {
+        pixi: {
+          scale: 1,
+        },
+        duration: 0.2,
+        ease: "power2.out",
+      });
+    }
   };
 
   return (
@@ -572,27 +604,76 @@ export function CheckpointItem({
         y={position.y + 20}
         ref={containerRef}
         visible={isOpenDetail}
+        interactive={true}
+        onMouseEnter={() => handleHover(true)}
+        onMouseLeave={() => handleHover(false)}
       >
         <PixiSpriteWithTexture
           asset={PaperScroll}
           x={0}
           y={0}
           width={200}
-          height={125}
+          height={130}
           anchor={{ x: 0.5, y: 0.5 }}
           zIndex={LayerPositions.GROUND}
           isInteractable={false}
         />
-        <pixiText
-          text="Hello Pixi React!"
-          x={0}
-          y={0}
-          width={200}
-          anchor={0.5}
+        {rewards?.map((reward, index, arr) => (
+          <pixiBitmapText
+            key={`Reward-${reward.id}`}
+            text={getRewardText(reward)}
+            x={0}
+            y={(arr.length === 1 ? 1 : index) * 20 - 40.5}
+            anchor={{ x: 0.5, y: 0.5 }}
+            zIndex={LayerPositions.GROUND + 1}
+            style={
+              new TextStyle({
+                fontSize: 16,
+                fill: 0x50352c,
+                fontFamily: "Crayon",
+              })
+            }
+          />
+        ))}
+        <PixiSpriteWithTexture
+          asset={canClaim ? Treasure_Open : Treasure_Closed}
+          x={80}
+          y={-65}
+          width={64}
+          height={64}
+          anchor={{ x: 0.5, y: 0.5 }}
           zIndex={LayerPositions.GROUND + 1}
-          style={new TextStyle({ fontSize: 12, fill: 0xffffff })}
+          isInteractable={false}
         />
+
+        {/* <pixiBitmapText
+          text={canClaim ? "Claim" : ""}
+          x={0}
+          y={20}
+          anchor={{ x: 0.5, y: 0.5 }}
+          zIndex={LayerPositions.GROUND + 1}
+          style={
+            new TextStyle({
+              fontSize: 16,
+              fill: canClaim ? 0xffffff : 0x50352c,
+              fontFamily: "Crayon",
+            })
+          }
+        /> */}
       </pixiContainer>
     </>
   );
+}
+
+function getRewardText(reward: IPoolReward["rewards"][0]) {
+  switch (reward.rewardType) {
+    case ERewardType.TOKEN:
+      return `${parseValueToDisplay(reward.rewardValue)} $MOVE`;
+    case ERewardType.NFT:
+      return `${reward.rewardValue} Arkai NFT`;
+    case ERewardType.ROLE:
+      return `${reward.rewardValue}`;
+    default:
+      return reward.rewardType;
+  }
 }

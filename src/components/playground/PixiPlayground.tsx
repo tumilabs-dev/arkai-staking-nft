@@ -3,7 +3,7 @@ import { useGSAP } from "@gsap/react";
 import { Application, extend } from "@pixi/react";
 import { useWindowSize } from "@uidotdev/usehooks";
 import gsap from "gsap";
-import { Container, Graphics, Sprite, Text } from "pixi.js";
+import { BitmapText, Container, Graphics, Sprite, Text } from "pixi.js";
 import { useRef } from "react";
 import { PixiSpriteResolver } from "./parts/commons/PixiSpriteResolver";
 import Checkpoint from "./parts/pool-1/checkpoint";
@@ -13,6 +13,7 @@ extend({
   Graphics,
   Sprite,
   Text,
+  BitmapText,
 });
 
 // Canvas was a 1099x1099px square
@@ -61,10 +62,11 @@ export function PixiPlayground() {
             height={canvasHeight}
             antialias
             bezierSmoothness={0.5}
-            backgroundColor={"transparent"}
             backgroundAlpha={0}
-            autoDensity
             resizeTo={containerRef}
+            resolution={window.devicePixelRatio}
+            autoDensity
+            powerPreference="high-performance"
           >
             <pixiContainer
               scale={scale}

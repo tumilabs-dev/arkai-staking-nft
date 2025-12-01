@@ -1,21 +1,21 @@
 import GameUI from "@/components/playground/gameUI/GameUI";
 import { PixiPlayground } from "@/components/playground/PixiPlayground";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useParams } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_app/pool/$poolId/")({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    const { poolId } = params;
-    return { poolId };
-  },
 });
 
 function RouteComponent() {
+  const { poolId } = useParams({
+    from: "/_app/pool/$poolId/",
+  });
+
   return (
     <div className="">
       <div className="relative mx-auto container">
         <PixiPlayground />
-        <GameUI />
+        <GameUI poolId={poolId} />
       </div>
     </div>
   );

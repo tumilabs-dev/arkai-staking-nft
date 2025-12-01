@@ -4,20 +4,25 @@ import { endpoint } from "@/integrations/axios/endpoint";
 import { useTokenManager } from "../authentication/useTokenManager";
 import { AxiosError } from "axios";
 
+export enum ERewardType {
+  TOKEN = "TOKEN",
+  NFT = "NFT",
+  ROLE = "ROLE",
+  CUSTOM = "CUSTOM",
+}
 export interface IPoolReward {
-  canClaim: boolean;
   poolId: string;
   poolName: string;
   requiredWeeks: number;
-  reward: {
+  rewards: {
     id: string;
     poolId: string;
     weekNumber: number;
-    rewardType: string;
+    rewardType: ERewardType;
     rewardValue: number;
-  };
-  weekNumber: number;
-  weeksHeld: number;
+    canClaim: boolean;
+  }[];
+  weekHeld: number;
 }
 
 export const useGetPoolRewards = ({ poolId }: { poolId?: string }) => {
@@ -32,10 +37,13 @@ export const useGetPoolRewards = ({ poolId }: { poolId?: string }) => {
     queryKey: currentQueryKey,
     queryFn: async () => {
       if (!poolId) {
-        return [];
+        return {
+          rewards: [],
+          weekHeld: 0,
+        };
       }
       try {
-        const response = await axiosInstance.get<IPoolReward[]>(
+        const response = await axiosInstance.get<IPoolReward>(
           endpoint.staking.rewards.getAvailableRewards,
           {
             headers: headerBuilder,

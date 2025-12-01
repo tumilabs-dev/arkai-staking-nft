@@ -7,9 +7,6 @@ export const particleEntryAnimation = (
   delay?: number,
   y?: number
 ) => {
-  console.log("y", y);
-  console.log("sprite.y", sprite.y);
-
   timeline
     .set(sprite, {
       pixi: {

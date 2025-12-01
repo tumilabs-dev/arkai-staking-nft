@@ -234,7 +234,6 @@ function PoolCard({ pool }: { pool: IPool }) {
                 fillColor="#afc1b1"
                 variant="icon"
                 onClick={async () => {
-                  console.log(pool.id);
                   await joinPool(pool.id);
                   setIsOpen(false);
                 }}

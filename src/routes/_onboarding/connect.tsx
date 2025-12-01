@@ -68,8 +68,6 @@ function RouteComponent() {
     () => {
       const timeline = gsap.timeline();
 
-      console.log(storageData, discord);
-
       // If wallet is not linked and discord is not connected
       if (
         (!storageData?.linked && !discord) ||
