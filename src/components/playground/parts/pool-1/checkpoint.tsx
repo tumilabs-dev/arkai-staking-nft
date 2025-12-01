@@ -1,4 +1,4 @@
-import { Graphics } from "pixi.js";
+import { Container, Graphics, TextStyle } from "pixi.js";
 import { LayerPositions } from "../../constants/LayerPosition.enum";
 import { PixiSpriteWithTexture } from "../commons/PixiSpriteWithTexture";
 
@@ -10,9 +10,12 @@ import Current_Point from "@/assets/pool/maps/pool-1/shared/current-point.png";
 import gsap from "gsap";
 import { particleEntryAnimation } from "../../animations/particleEntry.animation";
 import { useGSAP } from "@gsap/react";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
 import { useGetPoolRewards } from "@/hooks/pools/useGetPoolRewards";
+
+import PaperScroll from "@/assets/objects/paper-scroll.png";
+import { IPoolReward } from "@/hooks/pools/useGetPoolRewards";
 
 // First checkpoint position (manually provided)
 const FIRST_CHECKPOINT_POSITION = {
@@ -473,43 +476,123 @@ export default function Checkpoint() {
         ref={graphicsRef}
       />
       {checkpoint_positions.map((position, index) => (
-        <>
-          <PixiSpriteWithTexture
-            key={`Position-${index}`}
-            asset={
-              index === safeCurrentPoint
-                ? Checkpoint_Current
-                : index < safeCurrentPoint
-                ? Checkpoint_Checked
-                : Checkpoint_Image
-            }
-            x={position.x}
-            y={position.y}
-            zIndex={LayerPositions.GROUND}
-          />
-        </>
+        <CheckpointItem
+          key={`Position-${index}`}
+          canClaim={poolRewards?.[index]?.canClaim ?? false}
+          position={position}
+          isCurrentPoint={index === safeCurrentPoint}
+          reward={poolRewards?.[index]?.reward ?? undefined}
+        />
       ))}
-      {checkpoint_positions[safeCurrentPoint] && (
+    </pixiContainer>
+  );
+}
+
+export function CheckpointItem({
+  canClaim,
+  position,
+  isCurrentPoint = false,
+  reward,
+}: {
+  canClaim: boolean;
+  position: { x: number; y: number; width: number; height: number };
+  isCurrentPoint?: boolean;
+  reward?: IPoolReward["reward"];
+}) {
+  const containerRef = useRef<Container>(null);
+  const [isOpenDetail, setIsOpenDetail] = useState(false);
+
+  const handleClickDetail = () => {
+    gsap.context(() => {
+      if (isOpenDetail) {
+        gsap.to(containerRef.current, {
+          pixi: {
+            alpha: 0,
+          },
+          duration: 0.5,
+          ease: "power2.out",
+          onComplete: () => {
+            setIsOpenDetail(false);
+          },
+        });
+      } else {
+        setIsOpenDetail(true);
+        gsap.set(containerRef.current, {
+          pixi: {
+            alpha: 0,
+          },
+          ease: "power2.out",
+        });
+        gsap.to(containerRef.current, {
+          pixi: {
+            alpha: 1,
+          },
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      }
+    }, containerRef);
+  };
+
+  return (
+    <>
+      <PixiSpriteWithTexture
+        asset={
+          isCurrentPoint
+            ? Checkpoint_Current
+            : canClaim
+            ? Checkpoint_Checked
+            : Checkpoint_Image
+        }
+        x={position.x}
+        y={position.y}
+        zIndex={LayerPositions.GROUND}
+        onClick={handleClickDetail}
+        initAnimation={(timeline, sprite, onComplete) =>
+          particleEntryAnimation(timeline, sprite, onComplete)
+        }
+      />
+
+      {isCurrentPoint && (
         <PixiSpriteWithTexture
           asset={Current_Point}
-          x={
-            checkpoint_positions[safeCurrentPoint].x +
-            checkpoint_positions[safeCurrentPoint].width / 2 -
-            3
-          }
-          y={checkpoint_positions[safeCurrentPoint].y + 5}
+          x={position.x + position.width / 2 - 3}
+          y={position.y + 5}
           zIndex={LayerPositions.GROUND}
           initAnimation={(timeline, sprite, onComplete) =>
-            particleEntryAnimation(
-              timeline,
-              sprite,
-              onComplete,
-              safeCurrentPoint * 0.1 + 1
-            )
+            particleEntryAnimation(timeline, sprite, onComplete)
           }
           anchor={{ x: 0.5, y: 0.5 }}
+          onClick={handleClickDetail}
         />
       )}
-    </pixiContainer>
+
+      <pixiContainer
+        x={position.x + 150}
+        y={position.y + 20}
+        ref={containerRef}
+        visible={isOpenDetail}
+      >
+        <PixiSpriteWithTexture
+          asset={PaperScroll}
+          x={0}
+          y={0}
+          width={200}
+          height={125}
+          anchor={{ x: 0.5, y: 0.5 }}
+          zIndex={LayerPositions.GROUND}
+          isInteractable={false}
+        />
+        <pixiText
+          text="Hello Pixi React!"
+          x={0}
+          y={0}
+          width={200}
+          anchor={0.5}
+          zIndex={LayerPositions.GROUND + 1}
+          style={new TextStyle({ fontSize: 12, fill: 0xffffff })}
+        />
+      </pixiContainer>
+    </>
   );
 }

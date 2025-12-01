@@ -5,7 +5,7 @@ import { useTokenManager } from "../authentication/useTokenManager";
 import { AxiosError } from "axios";
 
 export interface IPool {
-  poolId: string;
+  id: string;
   requiredNftCount: number;
   name: string;
   description: string;

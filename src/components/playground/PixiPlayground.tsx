@@ -3,7 +3,7 @@ import { useGSAP } from "@gsap/react";
 import { Application, extend } from "@pixi/react";
 import { useWindowSize } from "@uidotdev/usehooks";
 import gsap from "gsap";
-import { Container, Graphics, Sprite } from "pixi.js";
+import { Container, Graphics, Sprite, Text } from "pixi.js";
 import { useRef } from "react";
 import { PixiSpriteResolver } from "./parts/commons/PixiSpriteResolver";
 import Checkpoint from "./parts/pool-1/checkpoint";
@@ -12,6 +12,7 @@ extend({
   Container,
   Graphics,
   Sprite,
+  Text,
 });
 
 // Canvas was a 1099x1099px square
