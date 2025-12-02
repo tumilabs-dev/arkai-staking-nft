@@ -1,8 +1,5 @@
 import { appConfig } from "@/constants/appConfig";
-import {
-    useProvider,
-    useWallet
-} from "@razorlabs/razorkit";
+import { useProvider, useWallet } from "@razorlabs/razorkit";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetNFTBalance = () => {

@@ -18,7 +18,7 @@ function RouteComponent() {
     >
       {/* Overlay */}
       <div className="absolute inset-0 bg-gray-900/60 z-0" />
-      <div className="z-10 relative h-full">
+      <div className="z-10 relative h-full ">
         <Outlet />
       </div>
     </div>

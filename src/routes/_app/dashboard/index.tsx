@@ -12,17 +12,29 @@ import { TimerIcon } from "@/components/icons/timer.icon";
 import { Button } from "@/components/ui/button";
 import InkButton from "@/components/ui/InkButton";
 import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
-import { createFileRoute } from "@tanstack/react-router";
+import { getRoleDueToNFTCount } from "@/constants/rolesMap";
+import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
+import { useGetPoolRewards } from "@/hooks/pools/useGetPoolRewards";
+import { resolveAsset } from "@/lib/resolveAsset";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ShieldCheck, Sword } from "lucide-react";
 
 export const Route = createFileRoute("/_app/dashboard/")({
   component: RouteComponent,
 });
 
-const currentWeek = 8;
-const maxWeeks = 15;
-const progress = (currentWeek / maxWeeks) * 100;
 function RouteComponent() {
+  const navigate = useNavigate();
+  const { data: currentPool } = useGetCurrentPool();
+
+  const { data: poolRewards } = useGetPoolRewards({
+    poolId: currentPool?.poolId,
+  });
+
+  const currentWeek = poolRewards?.weekHeld ?? 0;
+  const maxWeeks = poolRewards?.rewards.at(-1)?.weekNumber ?? 0;
+  const progress = (currentWeek / maxWeeks) * 100;
+
   return (
     <div className="bg-background min-h-[calc(100vh-10rem)]">
       <div className="container mx-auto px-4">
@@ -45,7 +57,7 @@ function RouteComponent() {
                   <div className="flex flex-col">
                     <span className="text-primary-900">Current Pool:</span>
                     <span className="text-accent font-medium">
-                      Mystic Glade Tier 2
+                      {currentPool?.pool.name}
                     </span>
                   </div>
                 </div>
@@ -55,7 +67,9 @@ function RouteComponent() {
                   <div className="flex flex-col">
                     <span className="text-primary-900">Discord Role:</span>
                     <span className="text-accent font-medium">
-                      Forest Guardian
+                      {getRoleDueToNFTCount(
+                        currentPool?.pool.requiredNftCount ?? 0
+                      )}
                     </span>
                   </div>
                 </div>
@@ -73,7 +87,8 @@ function RouteComponent() {
               <div className="gap-4 relative size-52">
                 <img src={Stamp} className="size-full object-cover" />
                 <img
-                  src={Pool1}
+                  src={resolveAsset(currentPool?.pool.resourceUrl ?? "")}
+                  loading="eager"
                   className="size-[78%] object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
                 />
               </div>
@@ -159,14 +174,20 @@ function RouteComponent() {
               </h3>
 
               <InkButton
-                className="w-full text-xl text-white"
+                className="w-full text-xl text-white hover:brightness-95 transition-all duration-300"
                 fillColor="#A4C3AF"
               >
                 Get more NFT
               </InkButton>
               <InkButton
-                className="w-full text-xl text-white"
+                className="w-full text-xl text-white hover:brightness-95 transition-all duration-300"
                 fillColor="#E8A849"
+                onClick={() => {
+                  navigate({
+                    to: "/pool/$poolId",
+                    params: { poolId: currentPool?.poolId ?? "" },
+                  });
+                }}
               >
                 Claim Rewards
               </InkButton>

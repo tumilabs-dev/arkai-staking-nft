@@ -42,6 +42,7 @@ export function PixiSpriteResolver({
       visible={true}
       initAnimation={initAnimationHandler}
       idleAnimation={idleAnimationHandler}
+      isInteractable={mapElement.isInteractable ?? true}
       scale={mapElement.scale ?? 1}
     />
   );

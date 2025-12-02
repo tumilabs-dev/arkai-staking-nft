@@ -1,17 +1,21 @@
-import { createFileRoute } from "@tanstack/react-router";
 import BrandLogoWhite from "@/assets/brand/brand-white.png";
 import { ArrowIcon } from "@/components/icons/arrow.icon";
 import InkButton from "@/components/ui/InkButton";
-import { useRouter } from "@tanstack/react-router";
-
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useRef } from "react";
 export const Route = createFileRoute("/_onboarding/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const router = useRouter();
+  const contentRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className="mx-auto container z-10 h-full flex flex-col justify-between py-4">
+    <div
+      ref={contentRef}
+      className="mx-auto container z-10 h-full flex flex-col justify-between py-4 "
+    >
       {/* Temp Navigation */}
       <div className="flex items-center justify-between">
         {/* Branding */}

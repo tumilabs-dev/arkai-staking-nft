@@ -26,7 +26,10 @@ export const useClaimRewards = ({ poolId }: { poolId: string }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [endpoint.staking.rewards.getAvailableRewards, poolId],
+        queryKey: [endpoint.staking.rewards.getAvailableRewards],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [endpoint.staking.rewards.getAvailableRewards],
       });
 
       customToast("All rewards claimed successfully", "success");

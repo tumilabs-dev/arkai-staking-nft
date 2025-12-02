@@ -510,7 +510,6 @@ export function CheckpointItem({
   isCurrentPoint?: boolean;
   rewards?: IPoolReward["rewards"];
 }) {
-  console.log(rewards);
   const containerRef = useRef<Container>(null);
   const [isOpenDetail, setIsOpenDetail] = useState(false);
 

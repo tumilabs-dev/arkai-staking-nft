@@ -67,6 +67,7 @@ export function PixiPlayground() {
             resolution={window.devicePixelRatio}
             autoDensity
             powerPreference="high-performance"
+            eventMode="dynamic"
           >
             <pixiContainer
               scale={scale}

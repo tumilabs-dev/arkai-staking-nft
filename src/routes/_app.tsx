@@ -7,7 +7,7 @@ export const Route = createFileRoute("/_app")({
 
 function RouteComponent() {
   return (
-    <main className="">
+    <main>
       <Header />
       <Outlet />
     </main>

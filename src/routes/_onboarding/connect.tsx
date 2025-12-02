@@ -11,7 +11,7 @@ import { ArrowIcon } from "@/components/icons/arrow.icon";
 import { DiscordIcon } from "@/components/icons/discord.icon";
 import InkButton from "@/components/ui/InkButton";
 import { WalletConnectButton } from "@/components/web3/WalletConnectButton";
-import { rolesMap } from "@/constants/rolesMap";
+import { getAvailableRoles, rolesMap } from "@/constants/rolesMap";
 import { useConnectDiscord } from "@/hooks/authentication/useConnectDiscord";
 import { useLoginWithWallet } from "@/hooks/authentication/useLoginWithWallet";
 import { useSignAndBindDiscord } from "@/hooks/authentication/useSignAndBindDiscord";
@@ -22,19 +22,16 @@ import { useWallet } from "@razorlabs/razorkit";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { gsap } from "gsap";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
 import {
   AlertDialog,
-  AlertDialogTrigger,
   AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/animate-ui/components/radix/alert-dialog";
 import { Check, X } from "lucide-react";
 
@@ -52,6 +49,7 @@ function RouteComponent() {
 
   const navigate = useNavigate();
   const pageRef = useRef<HTMLDivElement>(null);
+
   // Connect wallet function
   const { connected } = useWallet();
   const { loginDiscord, discord, disconnectDiscord } = useConnectDiscord();
@@ -247,7 +245,7 @@ function RouteComponent() {
   return (
     <div
       ref={pageRef}
-      className="h-full flex flex-col justify-evenly pt-10 py-8 "
+      className="h-full flex flex-col justify-evenly pt-10 py-8 page-content"
     >
       {/* Splash ink title */}
       <div className="relative w-fit mx-auto ">
@@ -279,20 +277,18 @@ function RouteComponent() {
                 <div className="w-full h-[75%] overflow-y-scroll relative">
                   <div className="grid grid-cols-3 gap-4">
                     {balance &&
-                      Object.keys(rolesMap)
-                        .filter((k) => Number(k) <= Number(balance))
-                        .map((roleKey) => (
-                          <div className="col-span-1 relative" key={roleKey}>
-                            <img
-                              src={ScrollBg}
-                              alt="Scroll BG"
-                              className="w-full h-full object-contain "
-                            />
-                            <span className="text-accent-foreground text-sm font-medium absolute left-1/2 -translate-x-1/2 top-1/3 -translate-y-1/3 max-w-full w-[80%] text-center">
-                              {rolesMap[roleKey as keyof typeof rolesMap]}
-                            </span>
-                          </div>
-                        ))}
+                      getAvailableRoles(balance).map((role) => (
+                        <div className="col-span-1 relative" key={role}>
+                          <img
+                            src={ScrollBg}
+                            alt="Scroll BG"
+                            className="w-full h-full object-contain "
+                          />
+                          <span className="text-accent-foreground text-sm font-medium absolute left-1/2 -translate-x-1/2 top-1/3 -translate-y-1/3 max-w-full w-[80%] text-center">
+                            {role}
+                          </span>
+                        </div>
+                      ))}
                   </div>
                 </div>
                 <div className="@container h-[25%] text-center flex flex-col items-center justify-end w-2/3 mx-auto">

@@ -4,6 +4,17 @@ import { cn } from "@/lib/utils";
 import { Link, useLocation } from "@tanstack/react-router";
 import InkButton from "../ui/InkButton";
 
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/animate-ui/components/radix/alert-dialog";
+import { Check, X } from "lucide-react";
+import { useState } from "react";
+
 const NAVIGATION_ITEMS = [
   {
     label: "Pool Overview",
@@ -29,8 +40,19 @@ const NAVIGATION_ITEMS = [
 
 export default function Header() {
   const location = useLocation().pathname.split("/");
-  const { storageData } = useLoginWithWallet();
+  const { storageData, logout } = useLoginWithWallet();
 
+  // Alert Dialog State
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Alert Dialog Functions
+  const onConfirm = () => {
+    setIsOpen(false);
+    logout();
+  };
+  const onCancel = () => {
+    setIsOpen(false);
+  };
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-white">
@@ -75,9 +97,40 @@ export default function Header() {
                 variant="icon"
                 className="text-white hover:text-primary-200 transition-colors duration-300"
                 fillColor="#cca289"
+                onClick={() => setIsOpen(true)}
               >
                 <div className="text-lg mt-0.5 ml-0.25">X</div>
               </InkButton>
+
+              <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+                <AlertDialogContent className="sm:max-w-[425px]">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Wanna logout?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Wanna leave Arkai?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="px-12">
+                    <InkButton
+                      fillColor="#A4C3AF"
+                      variant="icon"
+                      className="size-12"
+                      onClick={onConfirm}
+                    >
+                      <Check className="size-10 text-white" />
+                    </InkButton>
+
+                    <InkButton
+                      fillColor="#E49C85"
+                      variant="icon"
+                      className="size-12"
+                      onClick={onCancel}
+                    >
+                      <X className="size-10 text-white" />
+                    </InkButton>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </div>
         </div>

@@ -19,6 +19,7 @@ import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
 import { rolesMap } from "@/constants/rolesMap";
 import { IPool, useGetStakingPools } from "@/hooks/pools/useGetPools";
 import { useJoinPool } from "@/hooks/pools/useJoinPool";
+import { resolveAsset } from "@/lib/resolveAsset";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Check, Loader2, XIcon } from "lucide-react";
 import { useState } from "react";
@@ -77,7 +78,6 @@ const demoPools = [
 
 function RouteComponent() {
   const { data, isLoading } = useGetStakingPools();
-  console.log(data);
   return (
     <div className="bg-background min-h-screen">
       <div className="container mx-auto px-4 relative py-6 space-y-6">
@@ -161,7 +161,11 @@ function PoolCard({ pool }: { pool: IPool }) {
       {/* Decord */}
       <SpiralPadPattern color="#A46A37" size={30} className="w-full mb-1" />
       {/* Image */}
-      <img src={demoPools[pool.requiredNftCount - 1].image} alt={pool.name} />
+      <img
+        src={resolveAsset(pool.resourceUrl)}
+        alt={pool.name}
+        loading="eager"
+      />
 
       {/* Content */}
       <div className="bg-white w-full p-6 space-y-6">
@@ -214,10 +218,11 @@ function PoolCard({ pool }: { pool: IPool }) {
                 ? "Are you sure you want to switch to this pool? Other pools will be disabled."
                 : "Are you sure you want to join this pool? Other pools will be disabled."}
               {anyPoolJoined && (
-                <p className="text-destructive text-sm">
+                <span className="text-destructive text-sm">
+                  <br />
                   You will be switched to the new pool. Your current pool
                   progress will be lost.
-                </p>
+                </span>
               )}
             </AlertDialogDescription>
             <AlertDialogFooter>

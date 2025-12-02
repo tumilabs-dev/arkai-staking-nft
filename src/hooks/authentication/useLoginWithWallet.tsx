@@ -7,6 +7,7 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { AxiosResponse } from "axios";
 import { endpoint } from "@/integrations/axios/endpoint";
 import { useTokenManager } from "./useTokenManager";
+import { useNavigate } from "@tanstack/react-router";
 
 interface WalletLogin {
   walletAddress: string;
@@ -32,9 +33,10 @@ export interface WalletLoginResponse {
 }
 
 export const useLoginWithWallet = () => {
-  const { connected, address, signMessage, account } = useWallet();
+  const navigate = useNavigate();
+  const { connected, address, signMessage, account, disconnect } = useWallet();
 
-  const { setTokenAfterLogin } = useTokenManager();
+  const { setTokenAfterLogin, clearToken } = useTokenManager();
 
   const [loginData, setLoginData] = useLocalStorage<WalletLoginResponse | null>(
     "arkai-wallet-login",
@@ -83,5 +85,12 @@ export const useLoginWithWallet = () => {
     },
   });
 
-  return { ...mutateHook, storageData: loginData };
+  const logout = () => {
+    disconnect();
+    setLoginData(null);
+    clearToken();
+    navigate({ to: "/" });
+  };
+
+  return { ...mutateHook, storageData: loginData, logout };
 };

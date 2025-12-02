@@ -2,12 +2,14 @@ import ScrollBg from "@/assets/objects/paper-scroll.png";
 import PoolImage from "@/assets/pool/pool-1-image.png";
 import InkButton from "@/components/ui/InkButton";
 import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
+import { useGetNFTBalance } from "@/hooks/nfts/useGetNFTBalance";
 import { useClaimRewards } from "@/hooks/pools/useClaimRewards";
+import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
+import { useGetPoolRewards } from "@/hooks/pools/useGetPoolRewards";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef } from "react";
 
-const arkaiStaked = 1250;
 export default function GameUI({ poolId }: { poolId: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -32,6 +34,19 @@ export default function GameUI({ poolId }: { poolId: string }) {
   const { mutateAsync: claimRewards } = useClaimRewards({
     poolId,
   });
+
+  const { data: currentPool } = useGetCurrentPool();
+
+  const { data: poolReward } = useGetPoolRewards({
+    poolId: currentPool?.poolId,
+  });
+
+  const { data: totalHolded, isLoading } = useGetNFTBalance();
+
+  const totalWeeksHolded = poolReward?.weekHeld ?? 0;
+  const totalWeeks = poolReward?.rewards.at(-1)?.weekNumber ?? 0;
+  const rewardClaimed =
+    poolReward?.rewards.filter((reward) => reward.canClaim).length ?? 0;
 
   return (
     <>
@@ -64,18 +79,24 @@ export default function GameUI({ poolId }: { poolId: string }) {
             Your Staking Overview
           </h3>
           <div className="flex items-center justify-between">
-            <span>Total Weeks Staked:</span>
-            <span>10 / 15</span>
+            <span>Total Weeks Holded:</span>
+            <span>
+              {totalWeeksHolded?.toLocaleString()} /{" "}
+              {totalWeeks?.toLocaleString()}
+            </span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span>Arkai Staked:</span>
-            <span>{arkaiStaked.toLocaleString()} ARK</span>
+            <span>Arkai NFTs Owned:</span>
+            <span>{totalHolded?.toLocaleString()} NFTs</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span>Upcoming Rewards:</span>
-            <span>2</span>
+            <span>Rewards:</span>
+            <span>
+              {rewardClaimed?.toLocaleString()} /{" "}
+              {poolReward?.rewards.length?.toLocaleString() ?? 0}
+            </span>
           </div>
         </div>
         <SpiralPadPattern />
