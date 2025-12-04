@@ -35,6 +35,29 @@ function RouteComponent() {
   const maxWeeks = poolRewards?.rewards.at(-1)?.weekNumber ?? 0;
   const progress = (currentWeek / maxWeeks) * 100;
 
+  if (!currentPool) {
+    return (
+      <div className="bg-background min-h-[calc(100vh-10rem)]">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl font-bold text-center py-8 text-muted-foreground">
+            Join a pool to start staking
+          </h1>
+          <InkButton
+            className="w-full text-xl text-white hover:brightness-95 transition-all duration-300"
+            fillColor="#A4C3AF"
+            onClick={() => {
+              navigate({
+                to: "/pool",
+              });
+            }}
+          >
+            Join a Pool
+          </InkButton>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-background min-h-[calc(100vh-10rem)]">
       <div className="container mx-auto px-4">

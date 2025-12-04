@@ -13,7 +13,7 @@ function RouteComponent() {
 
   return (
     <div className="">
-      <div className="relative mx-auto container">
+      <div className="relative mx-auto container min-h-[calc(100vh-10rem)]">
         <PixiPlayground />
         <GameUI poolId={poolId} />
       </div>
