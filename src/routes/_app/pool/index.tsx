@@ -30,7 +30,7 @@ export const Route = createFileRoute("/_app/pool/")({
 
 const demoPools = [
   {
-    id: 1,
+    id: 3,
     name: "Whispering Woods",
     description:
       "Stake Arkai Rangers to unlock enchanted rewards and exclusive forest missions.",
@@ -39,7 +39,7 @@ const demoPools = [
     image: Pool1,
   },
   {
-    id: 2,
+    id: 6,
     name: "Crimson Caverns",
     description:
       "Only the bravest Arkai Knights can venture into the caverns for legendary treasures.",
@@ -48,7 +48,7 @@ const demoPools = [
     image: Pool2,
   },
   {
-    id: 3,
+    id: 9,
     name: "Golden Fields",
     description:
       "Ascend to the spires with Arkai Mages for cosmic rewards and arcane knowledge.",
@@ -57,7 +57,7 @@ const demoPools = [
     image: Pool3,
   },
   {
-    id: 4,
+    id: 12,
     name: "Sunken City",
     description:
       "Dive deep with Arkai Mariners to reclaim ancient relics from the lost city.",
@@ -66,7 +66,7 @@ const demoPools = [
     image: Pool4,
   },
   {
-    id: 5,
+    id: 15,
     name: "Shadowfell Peaks",
     description:
       "Conquer the daunting peaks alongside Arkai Rogues to claim elusive shadow gems.",
@@ -197,7 +197,7 @@ function PoolCard({ pool }: { pool: IPool }) {
             Reward:
           </span>
           <span className="text-muted-foreground max-w-[60%] text-right">
-            {demoPools[pool.requiredNftCount - 1].reward}
+            {demoPools.find((p) => p.id === pool.requiredNftCount)?.reward}
           </span>
         </div>
 
