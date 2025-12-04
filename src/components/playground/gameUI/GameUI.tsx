@@ -41,7 +41,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
     poolId: currentPool?.poolId,
   });
 
-  const { data: totalHolded, isLoading } = useGetNFTBalance();
+  const { data: totalHolded } = useGetNFTBalance();
 
   const totalWeeksHolded = poolReward?.weekHeld ?? 0;
   const totalWeeks = poolReward?.rewards.at(-1)?.weekNumber ?? 0;

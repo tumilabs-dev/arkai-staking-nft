@@ -1,5 +1,4 @@
 import Stamp from "@/assets/objects/stamp-border.png";
-import Pool1 from "@/assets/pool/pool-1.png";
 import {
   Progress,
   ProgressTrack,

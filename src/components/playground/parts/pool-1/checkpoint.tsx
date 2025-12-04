@@ -669,10 +669,10 @@ function getRewardText(reward: IPoolReward["rewards"][0]) {
     case ERewardType.TOKEN:
       return `${parseValueToDisplay(reward.rewardValue)} $MOVE`;
     case ERewardType.NFT:
-      return `${reward.rewardValue} Arkai NFT`;
+      return `${reward.rewardValue} ${reward.rewardName}`;
     case ERewardType.ROLE:
-      return `${reward.rewardValue}`;
+      return `${reward.rewardName}`;
     default:
-      return reward.rewardType;
+      return reward.rewardName;
   }
 }

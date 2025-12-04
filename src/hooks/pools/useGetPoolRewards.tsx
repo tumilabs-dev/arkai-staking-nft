@@ -20,6 +20,7 @@ export interface IPoolReward {
     weekNumber: number;
     rewardType: ERewardType;
     rewardValue: number;
+    rewardName: string;
     canClaim: boolean;
   }[];
   weekHeld: number;
