@@ -17,19 +17,20 @@ extend({
 });
 
 // Canvas was a 1099x1099px square
-const CANVAS_DESIGNED_EDGE = 1099;
 
-export function PixiPlayground() {
+export function PixiPlayground({ poolId }: { poolId: string }) {
+  const { data: mapData, isLoading } = useGetMap(poolId);
+  const mapDefines = mapData?.mapDefines ?? [];
+  const mapSizes = mapData?.mapSizes ?? { width: 0, height: 0 };
   const { height, width } = useWindowSize();
+
   // Multiplied by 2 because of the header and footer
   const realHeight = (height ?? 0) - 18 * 8 * 2;
   const edge = Math.min(realHeight, width ?? 0);
-  const scale = edge / 1099;
-  const canvasHeight = CANVAS_DESIGNED_EDGE * scale;
-  const canvasWidth = CANVAS_DESIGNED_EDGE * scale;
+  const scale = edge / mapSizes.width;
+  const canvasHeight = mapSizes.height * scale;
+  const canvasWidth = mapSizes.width * scale;
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const { data: mapElements, isLoading } = useGetMap();
 
   useGSAP(
     () => {
@@ -56,7 +57,7 @@ export function PixiPlayground() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-8">
       <div className="relative" ref={containerRef}>
-        {height && width && mapElements && (
+        {height && width && mapDefines && (
           <Application
             width={canvasWidth}
             height={canvasHeight}
@@ -74,14 +75,14 @@ export function PixiPlayground() {
               x={-canvasWidth / 20}
               y={-canvasHeight / 20}
             >
-              {mapElements.map((element, index) => (
+              {mapDefines.map((element, index) => (
                 <PixiSpriteResolver
                   key={`${element.asset}-${index}`}
                   mapElement={element}
                 />
               ))}
 
-              <Checkpoint />
+              <Checkpoint poolId={poolId} />
             </pixiContainer>
           </Application>
         )}

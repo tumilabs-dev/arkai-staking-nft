@@ -7,7 +7,6 @@ import { SpriteAnimation } from "../../constants/SpriteAnimation.enum";
 
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { particleInteractAnimation } from "../../animations/particleInteract.animation";
-import { FederatedPointerEvent, FederatedWheelEvent } from "pixi.js";
 
 gsap.registerPlugin(useGSAP, PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -90,7 +89,7 @@ export const PixiSpriteWithTexture = ({
   );
 
   // Handle Start Animation
-  const { contextSafe } = useGSAP(() => {
+  useGSAP(() => {
     if (
       !spriteRef.current ||
       !texture ||
@@ -161,6 +160,7 @@ export const PixiSpriteWithTexture = ({
       ref={spriteRef}
       onClick={(e: any) => {
         handleInteract();
+
         props?.onClick?.(e as any);
       }}
       cursor="pointer"

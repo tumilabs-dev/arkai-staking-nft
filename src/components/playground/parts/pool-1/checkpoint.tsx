@@ -2,12 +2,7 @@ import { Container, Graphics, TextStyle } from "pixi.js";
 import { LayerPositions } from "../../constants/LayerPosition.enum";
 import { PixiSpriteWithTexture } from "../commons/PixiSpriteWithTexture";
 
-import Checkpoint_Checked from "@/assets/pool/maps/pool-1/shared/checkpoint-checked.png";
-import Checkpoint_Current from "@/assets/pool/maps/pool-1/shared/checkpoint-current.png";
-import Checkpoint_Image from "@/assets/pool/maps/pool-1/shared/checkpoint.png";
-
 import PaperScroll from "@/assets/objects/paper-scroll.png";
-import Current_Point from "@/assets/pool/maps/pool-1/shared/current-point.png";
 import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
 import {
   ERewardType,
@@ -22,6 +17,8 @@ import { particleEntryAnimation } from "../../animations/particleEntry.animation
 
 import Treasure_Closed from "@/assets/objects/treasure-close.png";
 import Treasure_Open from "@/assets/objects/treasure-open.png";
+import { MapDefines, useGetMap } from "@/hooks/playground/useGetMap";
+import { resolveAsset } from "@/lib/resolveAsset";
 
 // First checkpoint position (manually provided)
 const FIRST_CHECKPOINT_POSITION = {
@@ -30,10 +27,6 @@ const FIRST_CHECKPOINT_POSITION = {
   width: 62,
   height: 63,
 };
-
-// SVG path data from Checkpoint_Path - the main path (4th path element)
-const Checkpoint_Path =
-  "M555.052 641.556C566.718 593.889 570.051 498.056 490.051 496.056C390.051 493.556 366.551 514.556 309.051 562.056C251.551 609.556 195.051 631.556 120.051 611.056C45.0515 590.556 20.5515 536.556 29.5515 451.556C38.5515 366.556 178.552 356.056 209.052 363.556C233.452 369.556 355.552 377.056 413.552 380.056C450.218 381.056 531.452 361.056 563.052 273.056C602.552 163.056 429.552 28.0556 294.552 104.056C159.552 180.056 -17.9483 179.056 2.05167 0.055542";
 
 /**
  * Parse SVG path and convert to points array
@@ -384,9 +377,10 @@ async function drawDashedLine(
   // .setSize(585.52, 669.99);
 }
 
-export default function Checkpoint() {
+export default function Checkpoint({ poolId }: { poolId: string }) {
+  const { data: mapData } = useGetMap(poolId);
   // Parse the SVG path from Checkpoint_Path
-  const pathPoints = parseSvgPath(Checkpoint_Path, 20);
+  const pathPoints = parseSvgPath(mapData?.checkpoint?.path ?? "", 20);
 
   // Get All the rewards for the current pool
   const { data: currentPool, isLoading: isCurrentPoolLoading } =
@@ -482,19 +476,21 @@ export default function Checkpoint() {
         }}
         ref={graphicsRef}
       />
-      {checkpoint_positions.map((position, index) => (
-        <CheckpointItem
-          key={`Position-${index}`}
-          canClaim={safeCurrentPoint >= index}
-          position={position}
-          isCurrentPoint={index === safeCurrentPoint}
-          rewards={
-            poolReward?.rewards?.filter(
-              (reward) => allWeeks[index] === reward.weekNumber
-            ) ?? []
-          }
-        />
-      ))}
+      {mapData?.checkpoint?.assets &&
+        checkpoint_positions.map((position, index) => (
+          <CheckpointItem
+            key={`Position-${index}`}
+            assets={mapData?.checkpoint?.assets}
+            canClaim={safeCurrentPoint >= index}
+            position={position}
+            isCurrentPoint={index === safeCurrentPoint}
+            rewards={
+              poolReward?.rewards?.filter(
+                (reward) => allWeeks[index] === reward.weekNumber
+              ) ?? []
+            }
+          />
+        ))}
     </pixiContainer>
   );
 }
@@ -504,11 +500,13 @@ export function CheckpointItem({
   position,
   isCurrentPoint = false,
   rewards,
+  assets,
 }: {
   canClaim: boolean;
   position: { x: number; y: number; width: number; height: number };
   isCurrentPoint?: boolean;
   rewards?: IPoolReward["rewards"];
+  assets: MapDefines["checkpoint"]["assets"];
 }) {
   const containerRef = useRef<Container>(null);
   const [isOpenDetail, setIsOpenDetail] = useState(false);
@@ -565,15 +563,16 @@ export function CheckpointItem({
     }
   };
 
+  const currentAsset = resolveAsset(assets?.current);
+  const checkedAsset = resolveAsset(assets?.checked);
+  const imageAsset = resolveAsset(assets?.image);
+  const indicatorAsset = resolveAsset(assets?.indicator);
+
   return (
     <>
       <PixiSpriteWithTexture
         asset={
-          isCurrentPoint
-            ? Checkpoint_Current
-            : canClaim
-            ? Checkpoint_Checked
-            : Checkpoint_Image
+          isCurrentPoint ? currentAsset : canClaim ? checkedAsset : imageAsset
         }
         x={position.x}
         y={position.y}
@@ -586,7 +585,7 @@ export function CheckpointItem({
 
       {isCurrentPoint && (
         <PixiSpriteWithTexture
-          asset={Current_Point}
+          asset={indicatorAsset}
           x={position.x + position.width / 2 - 3}
           y={position.y + 5}
           zIndex={LayerPositions.GROUND}
