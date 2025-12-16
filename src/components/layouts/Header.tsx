@@ -90,7 +90,7 @@ export default function Header() {
             {/* Right Side */}
             <div className="flex gap-2 items-center">
               <InkButton className="text-sm font-medium text-primary hover:text-primary-700 transition-colors duration-300">
-                Wellcome @{storageData?.discordUsername}
+                Welcome @{storageData?.discordUsername}
               </InkButton>
 
               <InkButton
