@@ -50,7 +50,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
 
   return (
     <>
-      <h1 className="absolute top-0 left-0 w-full el text-4xl font-bold text-center py-8 text-muted-foreground">
+      <h1 className="absolute top-0 left-0 w-full el text-4xl font-bold text-center pt-8 pb-4 px-8 text-muted-foreground">
         Your Staking Adventure Map
       </h1>
 
@@ -72,10 +72,10 @@ export default function GameUI({ poolId }: { poolId: string }) {
       </div>
 
       {/* Staking informations */}
-      <div className="el absolute top-32 right-0 w-[350px]">
+      <div className="el absolute top-32 right-0 w-[300px]">
         <SpiralPadPattern />
         <div className="bg-white p-4 space-y-2">
-          <h3 className="text-xl text-center md:text-2xl font-medium">
+          <h3 className="text-lg text-center md:text-xl font-medium">
             Your Staking Overview
           </h3>
           <div className="flex items-center justify-between">

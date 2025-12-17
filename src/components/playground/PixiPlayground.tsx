@@ -55,8 +55,8 @@ export function PixiPlayground({ poolId }: { poolId: string }) {
   if (isLoading) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-8">
-      <div className="relative" ref={containerRef}>
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-8 pt-0">
+      <div className="relative " ref={containerRef}>
         {height && width && mapDefines && (
           <Application
             width={canvasWidth}
@@ -73,7 +73,7 @@ export function PixiPlayground({ poolId }: { poolId: string }) {
             <pixiContainer
               scale={scale}
               x={-canvasWidth / 20}
-              y={-canvasHeight / 20}
+              y={-canvasHeight / 10}
             >
               {mapDefines.map((element, index) => (
                 <PixiSpriteResolver
