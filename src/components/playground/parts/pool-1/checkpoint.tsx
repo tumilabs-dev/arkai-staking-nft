@@ -1,24 +1,21 @@
-import { Container, Graphics, TextStyle } from "pixi.js";
+import { Graphics } from "pixi.js";
 import { LayerPositions } from "../../constants/LayerPosition.enum";
 import { PixiSpriteWithTexture } from "../commons/PixiSpriteWithTexture";
 
-import PaperScroll from "@/assets/objects/paper-scroll.png";
 import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
 import {
-  ERewardType,
   IPoolReward,
   useGetPoolRewards,
 } from "@/hooks/pools/useGetPoolRewards";
-import { parseValueToDisplay } from "@/lib/parseValue";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import { particleEntryAnimation } from "../../animations/particleEntry.animation";
 
-import Treasure_Closed from "@/assets/objects/treasure-close.png";
-import Treasure_Open from "@/assets/objects/treasure-open.png";
 import { MapDefines, useGetMap } from "@/hooks/playground/useGetMap";
 import { resolveAsset } from "@/lib/resolveAsset";
+import { useRewardVisibilityStore } from "../../store/reward.store";
+import { useApplication } from "@pixi/react";
 
 // First checkpoint position (manually provided)
 const FIRST_CHECKPOINT_POSITION = {
@@ -489,6 +486,7 @@ export default function Checkpoint({ poolId }: { poolId: string }) {
                 (reward) => allWeeks[index] === reward.weekNumber
               ) ?? []
             }
+            id={index.toString()}
           />
         ))}
     </pixiContainer>
@@ -501,72 +499,25 @@ export function CheckpointItem({
   isCurrentPoint = false,
   rewards,
   assets,
+  id,
 }: {
   canClaim: boolean;
   position: { x: number; y: number; width: number; height: number };
   isCurrentPoint?: boolean;
   rewards?: IPoolReward["rewards"];
   assets: MapDefines["checkpoint"]["assets"];
+  id: string;
 }) {
-  const containerRef = useRef<Container>(null);
-  const [isOpenDetail, setIsOpenDetail] = useState(false);
-
-  const handleClickDetail = () => {
-    gsap.context(() => {
-      if (isOpenDetail) {
-        gsap.to(containerRef.current, {
-          pixi: {
-            alpha: 0,
-          },
-          duration: 0.5,
-          ease: "power2.out",
-          onComplete: () => {
-            setIsOpenDetail(false);
-          },
-        });
-      } else {
-        setIsOpenDetail(true);
-        gsap.set(containerRef.current, {
-          pixi: {
-            alpha: 0,
-          },
-          ease: "power2.out",
-        });
-        gsap.to(containerRef.current, {
-          pixi: {
-            alpha: 1,
-          },
-          duration: 0.5,
-          ease: "power2.out",
-        });
-      }
-    }, containerRef);
-  };
-
-  const handleHover = (isHover: boolean) => {
-    if (isHover) {
-      gsap.to(containerRef.current, {
-        pixi: {
-          scale: 1.1,
-        },
-        duration: 0.2,
-        ease: "power2.in",
-      });
-    } else {
-      gsap.to(containerRef.current, {
-        pixi: {
-          scale: 1,
-        },
-        duration: 0.2,
-        ease: "power2.out",
-      });
-    }
-  };
-
   const currentAsset = resolveAsset(assets?.current);
   const checkedAsset = resolveAsset(assets?.checked);
   const imageAsset = resolveAsset(assets?.image);
   const indicatorAsset = resolveAsset(assets?.indicator);
+
+  const { setReward, clear, id: storeId } = useRewardVisibilityStore();
+
+  if (!rewards || !rewards?.length) {
+    return null;
+  }
 
   return (
     <>
@@ -577,7 +528,11 @@ export function CheckpointItem({
         x={position.x}
         y={position.y}
         zIndex={LayerPositions.GROUND}
-        onClick={handleClickDetail}
+        onClick={() => {
+          clear();
+          if (id === storeId) clear();
+          else setReward(rewards, id, position);
+        }}
         initAnimation={(timeline, sprite, onComplete) =>
           particleEntryAnimation(timeline, sprite, onComplete)
         }
@@ -593,85 +548,13 @@ export function CheckpointItem({
             particleEntryAnimation(timeline, sprite, onComplete)
           }
           anchor={{ x: 0.5, y: 0.5 }}
-          onClick={handleClickDetail}
+          onClick={() => {
+            clear();
+            if (id === storeId) clear();
+            else setReward(rewards, id, position);
+          }}
         />
       )}
-
-      <pixiContainer
-        x={position.x + 150}
-        y={position.y + 20}
-        ref={containerRef}
-        visible={isOpenDetail}
-        interactive={true}
-        onMouseEnter={() => handleHover(true)}
-        onMouseLeave={() => handleHover(false)}
-      >
-        <PixiSpriteWithTexture
-          asset={PaperScroll}
-          x={0}
-          y={0}
-          width={200}
-          height={130}
-          anchor={{ x: 0.5, y: 0.5 }}
-          zIndex={LayerPositions.GROUND}
-          isInteractable={false}
-        />
-        {rewards?.map((reward, index, arr) => (
-          <pixiBitmapText
-            key={`Reward-${reward.id}`}
-            text={getRewardText(reward)}
-            x={0}
-            y={(arr.length === 1 ? 1 : index) * 20 - 40.5}
-            anchor={{ x: 0.5, y: 0.5 }}
-            zIndex={LayerPositions.GROUND + 1}
-            style={
-              new TextStyle({
-                fontSize: 16,
-                fill: 0x50352c,
-                fontFamily: "Crayon",
-              })
-            }
-          />
-        ))}
-        <PixiSpriteWithTexture
-          asset={canClaim ? Treasure_Open : Treasure_Closed}
-          x={80}
-          y={-65}
-          width={64}
-          height={64}
-          anchor={{ x: 0.5, y: 0.5 }}
-          zIndex={LayerPositions.GROUND + 1}
-          isInteractable={false}
-        />
-
-        {/* <pixiBitmapText
-          text={canClaim ? "Claim" : ""}
-          x={0}
-          y={20}
-          anchor={{ x: 0.5, y: 0.5 }}
-          zIndex={LayerPositions.GROUND + 1}
-          style={
-            new TextStyle({
-              fontSize: 16,
-              fill: canClaim ? 0xffffff : 0x50352c,
-              fontFamily: "Crayon",
-            })
-          }
-        /> */}
-      </pixiContainer>
     </>
   );
-}
-
-function getRewardText(reward: IPoolReward["rewards"][0]) {
-  switch (reward.rewardType) {
-    case ERewardType.TOKEN:
-      return `${parseValueToDisplay(reward.rewardValue)} $MOVE`;
-    case ERewardType.NFT:
-      return `${reward.rewardValue} ${reward.rewardName}`;
-    case ERewardType.ROLE:
-      return `${reward.rewardName}`;
-    default:
-      return reward.rewardName;
-  }
 }

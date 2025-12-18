@@ -7,6 +7,7 @@ import { BitmapText, Container, Graphics, Sprite, Text } from "pixi.js";
 import { useRef } from "react";
 import { PixiSpriteResolver } from "./parts/commons/PixiSpriteResolver";
 import Checkpoint from "./parts/pool-1/checkpoint";
+import { useRewardVisibilityStore } from "./store/reward.store";
 // extend tells @pixi/react what Pixi.js components are available
 extend({
   Container,

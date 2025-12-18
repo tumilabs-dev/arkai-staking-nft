@@ -40,7 +40,7 @@ function RouteComponent() {
 
   const currentWeek = poolRewards?.weekHeld ?? 0;
   const maxWeeks = poolRewards?.rewards.at(-1)?.weekNumber ?? 0;
-  const progress = (currentWeek / maxWeeks) * 100;
+  const progress = (Math.min(currentWeek, maxWeeks) / maxWeeks) * 100;
 
   const getTotalRewardByType = (type: ERewardType, name?: string) => {
     return (
@@ -151,7 +151,7 @@ function RouteComponent() {
               <div className="flex items-center gap-4 text-xl justify-between ">
                 <span>Weeks Staked: </span>
                 <span className="text-accent font-medium">
-                  {currentWeek} / {maxWeeks}
+                  {Math.min(currentWeek, maxWeeks)} / {maxWeeks}
                 </span>
               </div>
               <Progress value={progress}>
@@ -224,6 +224,12 @@ function RouteComponent() {
                 <Button
                   className="flex items-center gap-4 text-xl rounded-none hover:bg-primary-50"
                   variant="ghost"
+                  onClick={() => {
+                    navigate({
+                      to: "/pool/$poolId",
+                      params: { poolId: currentPool?.poolId ?? "" },
+                    });
+                  }}
                 >
                   <span className="">Pool Details</span>
                   <ForwardIcon className="text-primary-400" />
