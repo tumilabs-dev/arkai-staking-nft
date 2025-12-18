@@ -164,7 +164,7 @@ function PoolCard({ pool }: { pool: IPool }) {
       <img
         src={resolveAsset(pool.resourceUrl)}
         alt={pool.name}
-        loading="eager"
+        loading="lazy"
       />
 
       {/* Content */}
@@ -241,6 +241,10 @@ function PoolCard({ pool }: { pool: IPool }) {
                 onClick={async () => {
                   await joinPool(pool.id);
                   setIsOpen(false);
+                  navigate({
+                    to: "/pool/$poolId",
+                    params: { poolId: pool.id },
+                  });
                 }}
               >
                 <Check className="w-4 h-4" />

@@ -55,7 +55,7 @@ export function PixiPlayground({ poolId }: { poolId: string }) {
   if (isLoading) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-8 pt-0">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)]">
       <div className="relative " ref={containerRef}>
         {height && width && mapDefines && (
           <Application

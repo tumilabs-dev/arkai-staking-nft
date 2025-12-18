@@ -7,7 +7,7 @@ export const Route = createFileRoute("/_app")({
 
 function RouteComponent() {
   return (
-    <main>
+    <main className="min-h-[calc(100vh-5rem)]">
       <Header />
       <Outlet />
     </main>

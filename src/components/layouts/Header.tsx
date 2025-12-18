@@ -14,6 +14,7 @@ import {
 } from "@/components/animate-ui/components/radix/alert-dialog";
 import { Check, X } from "lucide-react";
 import { useState } from "react";
+import { Notification } from "./Notification";
 
 const NAVIGATION_ITEMS = [
   {
@@ -27,14 +28,9 @@ const NAVIGATION_ITEMS = [
     match: "dashboard",
   },
   {
-    label: "Activity Log & Rules",
-    href: "/log",
-    match: "log",
-  },
-  {
-    label: "Notifications",
-    href: "/notification",
-    match: "notification",
+    label: "Rules",
+    href: "/rules",
+    match: "rules",
   },
 ];
 
@@ -84,6 +80,8 @@ export default function Header() {
                     </Link>
                   );
                 })}
+
+                <Notification />
               </div>
             </div>
 

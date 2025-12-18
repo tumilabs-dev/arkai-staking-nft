@@ -12,6 +12,8 @@ export const router = createTanstackRouter({
   routeTree,
   context: { ...rqContext },
   defaultPreload: "intent",
+  defaultStaleTime: 5000,
+  defaultViewTransition: { types: ["slide-left"] },
   Wrap: (props: { children: React.ReactNode }) => {
     return (
       <TanstackQuery.Provider {...rqContext}>

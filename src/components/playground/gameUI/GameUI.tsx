@@ -1,5 +1,6 @@
 import ScrollBg from "@/assets/objects/paper-scroll.png";
 import PoolImage from "@/assets/pool/pool-1-image.png";
+import { ArrowIcon } from "@/components/icons/arrow.icon";
 import InkButton from "@/components/ui/InkButton";
 import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
 import { useGetNFTBalance } from "@/hooks/nfts/useGetNFTBalance";
@@ -7,10 +8,13 @@ import { useClaimRewards } from "@/hooks/pools/useClaimRewards";
 import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
 import { useGetPoolRewards } from "@/hooks/pools/useGetPoolRewards";
 import { useGSAP } from "@gsap/react";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import gsap from "gsap";
 import { useRef } from "react";
 
 export default function GameUI({ poolId }: { poolId: string }) {
+  const router = useRouter();
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -50,9 +54,28 @@ export default function GameUI({ poolId }: { poolId: string }) {
 
   return (
     <>
-      <h1 className="absolute top-0 left-0 w-full el text-4xl font-bold text-center pt-8 pb-4 px-8 text-muted-foreground">
-        Your Staking Adventure Map
-      </h1>
+      <div className="absolute top-0 left-0 w-full grid grid-cols-5 items-center mt-4 px-4">
+        <InkButton
+          variant="icon-outlined"
+          className="p-4 z-10 w-fit"
+          fillColor="#A4C3AF"
+          onClick={() => {
+            const isNavigable = router.history.canGoBack();
+            if (isNavigable) {
+              router.history.back({});
+            } else {
+              router.navigate({
+                to: "/pool",
+              });
+            }
+          }}
+        >
+          <ArrowIcon className="text-secondary-500 rotate-180" />
+        </InkButton>
+        <h1 className="inline-block text-4xl font-bold text-right md:text-center px-8 text-muted-foreground col-span-4 md:col-span-3">
+          Your Staking Adventure Map
+        </h1>
+      </div>
 
       {/* Pool Image */}
       <div className="absolute top-32 left-0 el w-[200px] flex flex-col items-center justify-center mt-28">
@@ -104,7 +127,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
 
       <div className="el absolute bottom-24 left-0 w-full flex justify-center">
         <InkButton
-          className="w-1/2 text-white text-xl hover:brightness-150 transition-all duration-300"
+          className="w-fit px-4 md:px-12 text-white text-xl hover:brightness-150 transition-all duration-300"
           fillColor="#50352C"
           onClick={() => {
             claimRewards();

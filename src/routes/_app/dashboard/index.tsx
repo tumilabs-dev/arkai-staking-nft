@@ -11,9 +11,15 @@ import { TimerIcon } from "@/components/icons/timer.icon";
 import { Button } from "@/components/ui/button";
 import InkButton from "@/components/ui/InkButton";
 import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
-import { getRoleDueToNFTCount } from "@/constants/rolesMap";
+import { getAvailableRoles } from "@/constants/rolesMap";
+import { useGetNFTBalance } from "@/hooks/nfts/useGetNFTBalance";
 import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
-import { useGetPoolRewards } from "@/hooks/pools/useGetPoolRewards";
+import {
+  ERewardType,
+  useGetPoolRewards,
+} from "@/hooks/pools/useGetPoolRewards";
+import { parseValueToDisplay } from "@/lib/parseValue";
+
 import { resolveAsset } from "@/lib/resolveAsset";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ShieldCheck, Sword } from "lucide-react";
@@ -30,10 +36,25 @@ function RouteComponent() {
     poolId: currentPool?.poolId,
   });
 
+  const { data: balance } = useGetNFTBalance();
+
   const currentWeek = poolRewards?.weekHeld ?? 0;
   const maxWeeks = poolRewards?.rewards.at(-1)?.weekNumber ?? 0;
   const progress = (currentWeek / maxWeeks) * 100;
 
+  const getTotalRewardByType = (type: ERewardType, name?: string) => {
+    return (
+      poolRewards?.rewards.reduce((acc, reward) => {
+        if (reward.rewardType === type) {
+          if (name && reward.rewardName !== name) {
+            return acc;
+          }
+          return acc + reward.rewardValue;
+        }
+        return acc;
+      }, 0) ?? 0
+    );
+  };
   if (!currentPool) {
     return (
       <div className="bg-background min-h-[calc(100vh-10rem)]">
@@ -42,7 +63,7 @@ function RouteComponent() {
             Join a pool to start staking
           </h1>
           <InkButton
-            className="w-full text-xl text-white hover:brightness-95 transition-all duration-300"
+            className="w-[400px] text-xl text-white hover:brightness-95 transition-all duration-300"
             fillColor="#A4C3AF"
             onClick={() => {
               navigate({
@@ -88,10 +109,10 @@ function RouteComponent() {
                   <Sword className="w-6 h-6 text-secondary-400" />
                   <div className="flex flex-col">
                     <span className="text-primary-900">Discord Role:</span>
-                    <span className="text-accent font-medium">
-                      {getRoleDueToNFTCount(
-                        currentPool?.pool.requiredNftCount ?? 0
-                      )}
+                    <span className="text-accent font-medium line-clamp-2 text-ellipsis">
+                      {getAvailableRoles(balance ?? 0)
+                        .map((role) => role)
+                        .join(", ")}
                     </span>
                   </div>
                 </div>
@@ -99,6 +120,12 @@ function RouteComponent() {
                 <Button
                   className="flex items-center gap-4 text-xl rounded-none"
                   variant="ghost"
+                  onClick={() => {
+                    navigate({
+                      to: "/pool/$poolId",
+                      params: { poolId: currentPool?.poolId ?? "" },
+                    });
+                  }}
                 >
                   <span className="">Pool Details</span>
                   <ForwardIcon className="text-primary-400" />
@@ -134,6 +161,12 @@ function RouteComponent() {
               <div className="text-muted-foreground text-center">
                 Keep staking to unlock maximum potential rewards!
               </div>
+
+              {currentWeek >= maxWeeks && (
+                <div className="text-accent font-medium text-center">
+                  Maximum reached, switch to a new pool to continue staking!
+                </div>
+              )}
             </div>
 
             {/* Campaign remaining time */}
@@ -159,21 +192,29 @@ function RouteComponent() {
               <div className="flex items-center gap-4 text-xl justify-between ">
                 <span>
                   <DiamondIcon className="text-accent inline mr-2" />
-                  Arkai Tokens
+                  Move Tokens
                 </span>
-                <span className="text-accent font-medium">1,000 ARK</span>
+                <span className="text-accent font-medium">
+                  {parseValueToDisplay(getTotalRewardByType(ERewardType.TOKEN))}{" "}
+                  $MOVE
+                </span>
               </div>
               <div className="flex items-center gap-4 text-xl justify-between ">
                 <span>
                   <ScrollIcon className="text-accent inline mr-2" />
-                  Exclusive NFT Fragment
+                  Discord Roles
                 </span>
-                <span className="text-accent font-medium">1/5 Pieces</span>
+                <span className="text-accent font-medium">
+                  {getTotalRewardByType(ERewardType.ROLE)} Roles
+                </span>
               </div>
               <div className="flex items-center gap-4 text-xl justify-between ">
                 <span>
                   <StarIcon className="text-accent inline mr-2" />
-                  Mystic Aura Bonus
+                  Number of NFTs
+                </span>
+                <span className="text-accent font-medium">
+                  {getTotalRewardByType(ERewardType.NFT)} NFTs
                 </span>
               </div>
 

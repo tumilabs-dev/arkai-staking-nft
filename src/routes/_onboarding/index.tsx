@@ -49,7 +49,11 @@ function RouteComponent() {
           <InkButton
             variant="outlined"
             className="mt-8 py-2 font-medium text-white hover:px-3 transition-all duration-300"
-            onClick={() => router.navigate({ to: "/connect" })}
+            onClick={() =>
+              router.navigate({
+                to: "/connect",
+              })
+            }
           >
             Getting Start!!!
           </InkButton>
