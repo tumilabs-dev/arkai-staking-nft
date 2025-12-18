@@ -5,5 +5,9 @@ export const Route = createFileRoute("/_common")({
 });
 
 function RouteComponent() {
-  return <Outlet />;
+  return (
+    <main className="min-h-[calc(100vh-5rem)]">
+      <Outlet />
+    </main>
+  );
 }
