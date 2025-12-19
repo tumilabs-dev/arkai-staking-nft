@@ -302,7 +302,14 @@ function RouteComponent() {
                   </span>
                 </div>
               </div>
-
+              <div
+                className={cn(
+                  "absolute top-0 left-0 w-full h-full flex items-center justify-center bg-primary-900/80",
+                  isLoading || connecting ? "opacity-100" : "opacity-0 "
+                )}
+              >
+                <Loader />
+              </div>
               <div className="waitingToLink opacity-0 bg-primary-900/80 absolute top-0 left-0 w-full h-full px-[15%] py-[12%]">
                 <img
                   src={StampOverlay}
@@ -321,15 +328,6 @@ function RouteComponent() {
                     </span>
                   </InkButton>
                 </div>
-              </div>
-
-              <div
-                className={cn(
-                  "absolute top-0 left-0 w-full h-full flex items-center justify-center bg-primary-900/80",
-                  isLoading || connecting ? "opacity-100" : "opacity-0"
-                )}
-              >
-                <Loader />
               </div>
             </div>
             <div className="col-span-1 h-full bg-primary-200 flex items-center justify-center relative">
