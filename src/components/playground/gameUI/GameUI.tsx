@@ -1,7 +1,8 @@
 import ScrollBg from "@/assets/objects/paper-scroll.png";
+import TreasureChestClosed from "@/assets/objects/treasure-close.png";
+import TreasureChestOpen from "@/assets/objects/treasure-open.png";
 import PoolImage from "@/assets/pool/pool-1-image.png";
 import { ArrowIcon } from "@/components/icons/arrow.icon";
-import { RewardIcon } from "@/components/icons/reward.icon";
 import InkButton from "@/components/ui/InkButton";
 import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
 import { useClaimRewards } from "@/hooks/pools/useClaimRewards";
@@ -10,16 +11,14 @@ import {
   ERewardType,
   useGetPoolRewards,
 } from "@/hooks/pools/useGetPoolRewards";
+import { parseValueToDisplay } from "@/lib/parseValue";
+import { cn } from "@/lib/utils";
 import { useGSAP } from "@gsap/react";
 import { useRouter } from "@tanstack/react-router";
+import { formatDistanceToNow, sub } from "date-fns";
 import gsap from "gsap";
 import { useMemo, useRef } from "react";
 import { useRewardVisibilityStore } from "../store/reward.store";
-import { parseValueToDisplay } from "@/lib/parseValue";
-import { cn } from "@/lib/utils";
-import TreasureChestClosed from "@/assets/objects/treasure-close.png";
-import TreasureChestOpen from "@/assets/objects/treasure-open.png";
-import { formatDistanceToNow, sub } from "date-fns";
 
 export default function GameUI({ poolId }: { poolId: string }) {
   const router = useRouter();
@@ -56,10 +55,6 @@ export default function GameUI({ poolId }: { poolId: string }) {
 
   const totalWeeksHolded = poolReward?.weekHeld ?? 0;
   const totalWeeks = poolReward?.rewards?.at(-1)?.weekNumber ?? 0;
-  const upcomingRewards =
-    poolReward?.rewards
-      ?.filter((reward) => reward.canClaim)
-      ?.reduce((acc) => acc + 1, 0) ?? 0;
 
   const { reward, clear } = useRewardVisibilityStore();
   const isClaimable = reward?.every((reward) => reward.canClaim);
@@ -86,7 +81,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
       safeCurrentPoint === -1 ||
       safeCurrentPoint === poolReward?.rewards?.length - 1
     )
-      return "All claimed!";
+      return "End reached!";
     const nextTime = sub(poolReward?.startedAt, {
       weeks: poolReward?.rewards?.[safeCurrentPoint + 1]?.weekNumber ?? 0,
     });
@@ -102,7 +97,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
         <InkButton
           variant="icon-outlined"
           className="p-4 z-10 w-fit"
-          fillColor="#A4C3AF"
+          fillColor="#ffffff"
           onClick={() => {
             const isNavigable = router.history.canGoBack();
             if (isNavigable) {
@@ -114,7 +109,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
             }
           }}
         >
-          <ArrowIcon className="text-secondary-500 rotate-180" />
+          <ArrowIcon className="text-white rotate-180" />
         </InkButton>
         <h1 className="inline-block text-4xl font-bold text-right md:text-center px-8 text-muted-foreground col-span-4 md:col-span-3">
           Your Staking Adventure Map
@@ -140,7 +135,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
         </div>
 
         {/* Staking informations */}
-        <div className="el w-[300px]">
+        <div className="el w-[350px]">
           <SpiralPadPattern />
           <div className="bg-white p-4 space-y-2">
             <div className="flex items-center justify-between">
@@ -219,7 +214,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
             variant="icon-outlined"
             fillColor="#50352C"
             disabled={!isClaimable}
-            className="p-3 text-xl text-primary-500 hover:text-white hover:brightness-150 transition-all duration-300"
+            className="p-3 text-xl text-primary-500 hover:text-primary-900 hover:brightness-150 transition-all duration-300"
             onClick={() => {
               claimRewards();
               clear();

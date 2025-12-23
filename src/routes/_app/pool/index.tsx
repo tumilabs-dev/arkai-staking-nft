@@ -124,8 +124,7 @@ function PoolCard({ pool }: { pool: IPool }) {
           fillColor="#dd993e"
           onClick={async () => {
             await navigate({
-              to: "/pool/$poolId",
-              params: { poolId: pool.id },
+              to: "/pool/my-pool",
             });
           }}
         >
@@ -242,8 +241,7 @@ function PoolCard({ pool }: { pool: IPool }) {
                   await joinPool(pool.id);
                   setIsOpen(false);
                   navigate({
-                    to: "/pool/$poolId",
-                    params: { poolId: pool.id },
+                    to: "/pool/my-pool",
                   });
                 }}
               >

@@ -5,9 +5,11 @@ import axiosInstance from "@/integrations/axios";
 import convertUint8ToHexString from "@/lib/convertUint8ArrayToHex";
 import { useMutation } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, isAxiosError } from "axios";
 import { WalletLoginResponse } from "./useLoginWithWallet";
 import { endpoint } from "@/integrations/axios/endpoint";
+import { toast } from "sonner";
+import { customToast } from "@/components/ui/customToast";
 
 interface ConnectWalletDto {
   discordId: string;
@@ -31,6 +33,8 @@ interface VerifyWalletDto {
   roleTier: number;
   roleId: string | null;
   tokens: string[];
+  accessToken: string;
+  refreshToken: string;
 }
 
 export const useSignAndBindDiscord = () => {
@@ -87,8 +91,17 @@ export const useSignAndBindDiscord = () => {
         nftCount: response.data.nftCount,
         roleTier: response.data.roleTier,
         lastSyncedAt: new Date().toISOString(),
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken,
       });
       return response.data;
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        customToast(error.response?.data.message, "error");
+        return;
+      }
+      toast.error("An unknown error occurred");
     },
   });
 

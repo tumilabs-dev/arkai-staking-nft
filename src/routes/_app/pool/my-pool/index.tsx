@@ -1,18 +1,25 @@
+import PoolBG from "@/assets/pool/bg.png";
 import GameUI from "@/components/playground/gameUI/GameUI";
 import { PixiPlayground } from "@/components/playground/PixiPlayground";
 import { Loader } from "@/components/ui/loader";
-import { createFileRoute, useParams } from "@tanstack/react-router";
+import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
+import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
-import PoolBG from "@/assets/pool/bg.png";
 
-export const Route = createFileRoute("/_app/pool/$poolId/")({
+export const Route = createFileRoute("/_app/pool/my-pool/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { poolId } = useParams({
-    from: "/_app/pool/$poolId/",
-  });
+  const { data: currentPool, isLoading: isCurrentPoolLoading } =
+    useGetCurrentPool();
+
+  if (isCurrentPoolLoading)
+    return (
+      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-primary-900/80">
+        <Loader />
+      </div>
+    );
 
   return (
     <div
@@ -33,9 +40,9 @@ function RouteComponent() {
             </div>
           }
         >
-          <PixiPlayground poolId={poolId} />
+          <PixiPlayground poolId={currentPool?.poolId ?? ""} />
         </Suspense>
-        <GameUI poolId={poolId} />
+        <GameUI poolId={currentPool?.poolId ?? ""} />
       </div>
     </div>
   );

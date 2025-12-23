@@ -122,8 +122,7 @@ function RouteComponent() {
                   variant="ghost"
                   onClick={() => {
                     navigate({
-                      to: "/pool/$poolId",
-                      params: { poolId: currentPool?.poolId ?? "" },
+                      to: "/pool/my-pool",
                     });
                   }}
                 >
@@ -226,8 +225,7 @@ function RouteComponent() {
                   variant="ghost"
                   onClick={() => {
                     navigate({
-                      to: "/pool/$poolId",
-                      params: { poolId: currentPool?.poolId ?? "" },
+                      to: "/pool/my-pool",
                     });
                   }}
                 >
@@ -253,8 +251,7 @@ function RouteComponent() {
                 fillColor="#E8A849"
                 onClick={() => {
                   navigate({
-                    to: "/pool/$poolId",
-                    params: { poolId: currentPool?.poolId ?? "" },
+                    to: "/pool/my-pool",
                   });
                 }}
               >

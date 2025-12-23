@@ -49,13 +49,13 @@ export default function InkButton({
     return (
       <button
         {...props}
-        className={`cursor-pointer relative inline-flex flex-col items-center justify-center ${className}`}
+        className={`group cursor-pointer relative inline-flex flex-col items-center justify-center ${className}`}
       >
         <svg
           viewBox="0 0 73 35"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="absolute top-0 left-0 w-full h-full z-0"
+          className="group-hover:opacity-100 opacity-0 transition-all duration-300 absolute top-0 left-0 w-full h-full z-0"
         >
           <path
             d="M0.53736 26.2157C7.09326 42.3461 70.0883 34.0235 72.7541 19.0514C76.9551 -4.5435 19.6381 -2.39851 11.4687 5.32348C11.1661 5.60948 11.2156 6.13778 11.4687 6.02418C33.6076 -3.9143 73.9315 2.3634 70.5155 19.0515C66.5761 31.7641 2.0346 40.8589 1.77295 23.3557C1.60066 11.8312 30.4968 0.976289 51.4001 4.43687C52.0252 4.29387 51.5331 3.66857 50.8477 3.53597C28.4326 -0.157246 -4.41017 10.826 0.53736 26.2157Z"
