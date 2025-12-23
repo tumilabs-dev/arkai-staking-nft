@@ -11,7 +11,7 @@ import { ArrowIcon } from "@/components/icons/arrow.icon";
 import { DiscordIcon } from "@/components/icons/discord.icon";
 import InkButton from "@/components/ui/InkButton";
 import { WalletConnectButton } from "@/components/web3/WalletConnectButton";
-import { getAvailableRoles, rolesMap } from "@/constants/rolesMap";
+import { getAvailableRoles } from "@/constants/rolesMap";
 import { useConnectDiscord } from "@/hooks/authentication/useConnectDiscord";
 import { useLoginWithWallet } from "@/hooks/authentication/useLoginWithWallet";
 import { useSignAndBindDiscord } from "@/hooks/authentication/useSignAndBindDiscord";
@@ -22,7 +22,7 @@ import { useWallet } from "@razorlabs/razorkit";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { gsap } from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { z } from "zod";
 
 import {
@@ -33,8 +33,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/animate-ui/components/radix/alert-dialog";
-import { Check, X } from "lucide-react";
 import { Loader } from "@/components/ui/loader";
+import { Check, X } from "lucide-react";
 
 export const Route = createFileRoute("/_onboarding/connect")({
   component: RouteComponent,

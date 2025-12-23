@@ -24,6 +24,7 @@ export interface IPoolReward {
     canClaim: boolean;
   }[];
   weekHeld: number;
+  startedAt: Date;
 }
 
 export const useGetPoolRewards = ({ poolId }: { poolId?: string }) => {
@@ -41,6 +42,7 @@ export const useGetPoolRewards = ({ poolId }: { poolId?: string }) => {
         return {
           rewards: [],
           weekHeld: 0,
+          startedAt: new Date(),
         };
       }
       try {

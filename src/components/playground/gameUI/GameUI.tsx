@@ -13,12 +13,13 @@ import {
 import { useGSAP } from "@gsap/react";
 import { useRouter } from "@tanstack/react-router";
 import gsap from "gsap";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useRewardVisibilityStore } from "../store/reward.store";
 import { parseValueToDisplay } from "@/lib/parseValue";
 import { cn } from "@/lib/utils";
 import TreasureChestClosed from "@/assets/objects/treasure-close.png";
 import TreasureChestOpen from "@/assets/objects/treasure-open.png";
+import { formatDistanceToNow, sub } from "date-fns";
 
 export default function GameUI({ poolId }: { poolId: string }) {
   const router = useRouter();
@@ -66,6 +67,32 @@ export default function GameUI({ poolId }: { poolId: string }) {
   const isClaimed =
     !isClaimable &&
     reward?.every((reward) => reward?.weekNumber <= totalWeeksHolded);
+
+  const safeCurrentPoint = useMemo(() => {
+    if (!poolReward?.rewards?.length) return 0;
+    if ((poolReward?.weekHeld ?? 0) === 0) return 0;
+    for (let i = 0; i < poolReward?.rewards?.length; i++) {
+      if (poolReward?.rewards?.[i]?.weekNumber === poolReward?.weekHeld)
+        return i;
+      if (poolReward?.rewards?.[i]?.weekNumber < (poolReward?.weekHeld ?? 0))
+        continue;
+    }
+    return poolReward?.rewards?.length - 1;
+  }, [poolReward?.rewards?.length, poolReward?.weekHeld]);
+
+  const remainingTime = useMemo(() => {
+    if (
+      !poolReward?.startedAt ||
+      safeCurrentPoint === -1 ||
+      safeCurrentPoint === poolReward?.rewards?.length - 1
+    )
+      return "All claimed!";
+    const nextTime = sub(poolReward?.startedAt, {
+      weeks: poolReward?.rewards?.[safeCurrentPoint + 1]?.weekNumber ?? 0,
+    });
+
+    return formatDistanceToNow(nextTime);
+  }, [poolReward?.startedAt]);
 
   const tresureChestRef = useRef<HTMLDivElement>(null);
 
@@ -124,12 +151,9 @@ export default function GameUI({ poolId }: { poolId: string }) {
               </span>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between capitalize">
               <span>Upcoming Rewards:</span>
-              <span>
-                {upcomingRewards}{" "}
-                <RewardIcon className="text-accent inline mr-2" />
-              </span>
+              <span>{remainingTime ?? "No upcoming rewards"}</span>
             </div>
           </div>
           <SpiralPadPattern />
