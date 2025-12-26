@@ -3,6 +3,7 @@ import GameUI from "@/components/playground/gameUI/GameUI";
 import { PixiPlayground } from "@/components/playground/PixiPlayground";
 import { Loader } from "@/components/ui/loader";
 import { useGetCurrentPool } from "@/hooks/pools/useGetCurrentPool";
+import { resolveAsset } from "@/lib/resolveAsset";
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
 
@@ -25,7 +26,10 @@ function RouteComponent() {
     <div
       className=""
       style={{
-        backgroundImage: `url(` + PoolBG + `)`,
+        backgroundImage:
+          `url(` +
+          resolveAsset("/backgrounds/" + currentPool?.poolId) +
+          `.png)`,
         backgroundSize: "cover",
         backgroundPosition: "center -10rem",
         backgroundRepeat: "no-repeat",

@@ -1,12 +1,12 @@
 {
-  "poolId": "6193f8bd-f084-4620-90f1-22636ad3785a",
+  "poolId": "8cb41b82-fa68-4005-b0ea-3dca99f9b264",
   "mapSizes": {
     "width": 1099,
     "height": 1036
   },
   "mapDefines": [
     {
-      "asset": "/maps/pool-1/island/island-1/island.png",
+      "asset": "/maps/pool-5/island/island-1/island.png",
       "x": 147.14,
       "y": 197.41,
       "index": 5,
@@ -36,7 +36,7 @@
       "scale": 1
     },
     {
-      "asset": "/maps/pool-1/island/island-1/mountain-1.png",
+      "asset": "/maps/pool-5/island/island-1/mountain-1.png",
       "x": 365.67,
       "y": 176.2,
       "index": 5,
@@ -46,7 +46,7 @@
       "scale": 1
     },
     {
-      "asset": "/maps/pool-1/island/island-1/mountain-2.png",
+      "asset": "/maps/pool-5/island/island-1/mountain-2.png",
       "x": 644.84,
       "y": 286.71,
       "index": 5,
@@ -56,7 +56,7 @@
       "scale": 1
     },
     {
-      "asset": "/maps/pool-1/island/island-1/mountain-2.png",
+      "asset": "/maps/pool-5/island/island-1/mountain-3.png",
       "x": 676.5,
       "y": 391.16,
       "index": 5,
@@ -66,7 +66,7 @@
       "scale": 1
     },
     {
-      "asset": "/maps/pool-1/island/island-1/mountain-3.png",
+      "asset": "/maps/pool-5/island/island-1/mountain-4.png",
       "x": 612.64,
       "y": 528.16,
       "index": 5,
@@ -676,7 +676,7 @@
       "scale": 1
     },
     {
-      "asset": "/maps/pool-1/island/island-2/island.png",
+      "asset": "/maps/pool-5/island/island-2/island.png",
       "x": 974.2,
       "y": 754.39,
       "index": 5,
@@ -706,7 +706,7 @@
       "scale": 1
     },
     {
-      "asset": "/maps/pool-1/island/island-3/island.png",
+      "asset": "/maps/pool-5/island/island-3/island.png",
       "x": 82.64,
       "y": 457.44,
       "index": 5,
@@ -770,7 +770,7 @@
     "path": "M555.052 641.556C566.718 593.889 570.051 498.056 490.051 496.056C390.051 493.556 366.551 514.556 309.051 562.056C251.551 609.556 195.051 631.556 120.051 611.056C45.0515 590.556 20.5515 536.556 29.5515 451.556C38.5515 366.556 178.552 356.056 209.052 363.556C233.452 369.556 355.552 377.056 413.552 380.056C450.218 381.056 531.452 361.056 563.052 273.056C602.552 163.056 429.552 28.0556 294.552 104.056C159.552 180.056 -17.9483 179.056 2.05167 0.055542",
     "assets": {
       "current": "/maps/pool-1/shared/checkpoint-current.png",
-      "checked": "/maps/pool-1/shared/checkpoint-checked.png",
+      "checked": "/maps/pool-5/shared/checkpoint-checked.png",
       "image": "/maps/pool-1/shared/checkpoint.png",
       "indicator": "/maps/pool-1/shared/current-point.png"
     }
