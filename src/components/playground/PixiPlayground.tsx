@@ -25,7 +25,7 @@ export function PixiPlayground({ poolId }: { poolId: string }) {
   const { height, width } = useWindowSize();
 
   // Multiplied by 2 because of the header and footer
-  const realHeight = (height ?? 0) - 18 * 8 * 2;
+  const realHeight = (height ?? 0) - 18 * 8;
   const edge = Math.min(realHeight, width ?? 0);
   const scale = edge / mapSizes.width;
   const canvasHeight = mapSizes.height * scale;

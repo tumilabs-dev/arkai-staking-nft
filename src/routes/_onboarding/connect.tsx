@@ -275,7 +275,7 @@ function RouteComponent() {
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[98%] h-[98%] object-contain"
                 />
                 {/* Roles */}
-                <div className="w-full h-[75%] overflow-y-scroll relative">
+                <div className="w-full h-[75%] overflow-y-scroll scrollbar-hide relative">
                   <div className="grid grid-cols-3 gap-4">
                     {balance &&
                       getAvailableRoles(balance).map((role) => (

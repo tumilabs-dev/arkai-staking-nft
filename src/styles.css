@@ -24,6 +24,21 @@ code {
     monospace;
 }
 
+.scrollbar-hide {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.stroked-text {
+  filter: drop-shadow(3px 0 0 rgb(237, 237, 237))
+    drop-shadow(0 3px 0 rgb(237, 237, 237))
+    drop-shadow(-3px 0 0 rgb(237, 237, 237))
+    drop-shadow(0 -3px 0 rgb(237, 237, 237));
+}
+
 /* Color definitions for shadcn */
 /* Base colors: Background #F8E3CF, Primary #A46A37, Secondary #839C8C */
 

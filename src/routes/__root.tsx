@@ -13,10 +13,12 @@ gsap.registerPlugin(useGSAP);
 
 function RootComponent() {
   return (
-    <div className="main-content">
-      <Outlet />
+    <>
+      <div className="main-content">
+        <Outlet />
+        <Toaster />
+      </div>
       <Footer />
-      <Toaster />
-    </div>
+    </>
   );
 }

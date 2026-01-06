@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 
 export default function Footer() {
   return (
-    <footer className="sticky bottom-0 bg-white py-2 px-4">
+    <footer className="bg-white py-2 px-4 z-10">
       <div className="container mx-auto flex items-center justify-between">
         {/* Brand  */}
         <div className="flex items-center gap-4">

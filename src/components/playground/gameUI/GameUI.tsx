@@ -111,7 +111,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
         >
           <ArrowIcon className="text-white rotate-180" />
         </InkButton>
-        <h1 className="inline-block text-4xl font-bold text-right md:text-center px-8 text-muted-foreground col-span-4 md:col-span-3">
+        <h1 className="inline-block text-4xl font-bold text-right md:text-center px-8 text-muted-foreground col-span-4 md:col-span-3 stroked-text">
           Your Staking Adventure Map
         </h1>
       </div>
@@ -212,8 +212,8 @@ export default function GameUI({ poolId }: { poolId: string }) {
 
           <InkButton
             variant="icon-outlined"
-            fillColor="#50352C"
-            disabled={!isClaimable}
+            fillColor={!isClaimable || isClaimed ? "transparent" : "#50352C"}
+            disabled={!isClaimable || isClaimed}
             className="p-3 text-xl text-primary-500 hover:text-primary-900 hover:brightness-150 transition-all duration-300"
             onClick={() => {
               claimRewards();

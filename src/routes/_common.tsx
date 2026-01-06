@@ -6,7 +6,7 @@ export const Route = createFileRoute("/_common")({
 
 function RouteComponent() {
   return (
-    <main className="min-h-[calc(100vh-5rem)]">
+    <main className="min-h-[calc(100vh)]">
       <Outlet />
     </main>
   );
