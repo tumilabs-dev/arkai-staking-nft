@@ -1,7 +1,7 @@
 import ScrollBg from "@/assets/objects/paper-scroll.png";
 import TreasureChestClosed from "@/assets/objects/treasure-close.png";
 import TreasureChestOpen from "@/assets/objects/treasure-open.png";
-import PoolImage from "@/assets/pool/pool-1-image.png";
+import { resolveAsset } from "@/lib/resolveAsset";
 import { ArrowIcon } from "@/components/icons/arrow.icon";
 import InkButton from "@/components/ui/InkButton";
 import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
@@ -120,7 +120,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
       <div className="absolute top-32 left-0 flex flex-col items-center justify-center">
         <div className="relative el w-[200px] flex flex-col items-center justify-center mt-28">
           <img
-            src={PoolImage}
+            src={resolveAsset(currentPool?.pool?.resourceUrl ?? "")}
             alt="Pool Image"
             className="w-[80%] object-contain absolute -top-[40%] left-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
           />
@@ -130,7 +130,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
             className="w-full h-full object-contain z-10"
           />
           <span className="text-center text-xl max-w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-2/3 z-20">
-            Whispering Woods
+            {currentPool?.pool?.name}
           </span>
         </div>
 

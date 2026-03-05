@@ -1,0 +1,20 @@
+{
+  "planka_url": "https://task-v2.tumilabs.dev",
+  "project_id": "1717287872861571034",
+  "project_name": "TumiTask",
+  "board_id": "1717288712401848300",
+  "board_name": "ArkaiStaking",
+  "flow": ["Backlog", "To Do", "Doing", "Checking", "Done", "Feedback", "Shut!!!"],
+  "list_ids": {
+    "Backlog": "1717289111615703024",
+    "To Do": "1717289164161943538",
+    "Doing": "1717289451832477683",
+    "Checking": "1717289760306759670",
+    "Done": "1717289781076953079",
+    "Feedback": "1717289835208640504",
+    "Shut!!!": "1717289877713717241"
+  },
+  "doing_list": "Doing",
+  "done_lists": ["Done", "Shut!!!"],
+  "auto_comment": true
+}

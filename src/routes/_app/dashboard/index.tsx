@@ -23,6 +23,7 @@ import { parseValueToDisplay } from "@/lib/parseValue";
 import { resolveAsset } from "@/lib/resolveAsset";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ShieldCheck, Sword } from "lucide-react";
+import { addWeeks, formatDistanceToNow, isPast } from "date-fns";
 
 export const Route = createFileRoute("/_app/dashboard/")({
   component: RouteComponent,
@@ -174,7 +175,11 @@ function RouteComponent() {
                 <TimerIcon className="text-accent" />
                 <span className="text-2xl font-medium">Campaign Ends In</span>
                 <span className="flex items-center gap-2 text-xl text-accent">
-                  <span>12 days</span>
+                  {poolRewards?.startedAt && maxWeeks > 0
+                    ? isPast(addWeeks(new Date(poolRewards.startedAt), maxWeeks))
+                      ? "Campaign ended"
+                      : formatDistanceToNow(addWeeks(new Date(poolRewards.startedAt), maxWeeks), { addSuffix: false })
+                    : "-"}
                 </span>
                 <span className="text-center w-full text-muted-foreground">
                   Don't miss out on your Arkai rewards!

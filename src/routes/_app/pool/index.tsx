@@ -1,9 +1,4 @@
 import SplashInkTitle from "@/assets/objects/splash-ink.png";
-import Pool1 from "@/assets/pool/pool-1.png";
-import Pool2 from "@/assets/pool/pool-2.png";
-import Pool3 from "@/assets/pool/pool-3.png";
-import Pool4 from "@/assets/pool/pool-4.png";
-import Pool5 from "@/assets/pool/pool-5.png";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -28,53 +23,6 @@ export const Route = createFileRoute("/_app/pool/")({
   component: RouteComponent,
 });
 
-const demoPools = [
-  {
-    id: 1,
-    name: "Whispering Woods",
-    description:
-      "Stake Arkai Rangers to unlock enchanted rewards and exclusive forest missions.",
-    requiredRole: "Ranger Guild Member",
-    reward: "Exclusive Ranger NFT, Daily ARK Coins",
-    image: Pool1,
-  },
-  {
-    id: 2,
-    name: "Crimson Caverns",
-    description:
-      "Only the bravest Arkai Knights can venture into the caverns for legendary treasures.",
-    requiredRole: "Knight Order Initiate",
-    reward: "Legendary Weapon NFT, Boosted ARK APR",
-    image: Pool2,
-  },
-  {
-    id: 3,
-    name: "Golden Fields",
-    description:
-      "Ascend to the spires with Arkai Mages for cosmic rewards and arcane knowledge.",
-    requiredRole: "Archmage Council",
-    reward: "Rare Spellbook NFT, Access to Alpha Quests",
-    image: Pool3,
-  },
-  {
-    id: 4,
-    name: "Sunken City",
-    description:
-      "Dive deep with Arkai Mariners to reclaim ancient relics from the lost city.",
-    requiredRole: "Mariner Fleet Captain",
-    reward: "Unique Ocean Relic NFT, Tidal Surge Bonuses",
-    image: Pool4,
-  },
-  {
-    id: 5,
-    name: "Shadowfell Peaks",
-    description:
-      "Conquer the daunting peaks alongside Arkai Rogues to claim elusive shadow gems.",
-    requiredRole: "Shadow Rogue Initiate",
-    reward: "Legendary Weapon NFT, Boosted ARK APR",
-    image: Pool5,
-  },
-];
 
 function RouteComponent() {
   const { data, isLoading } = useGetStakingPools();
@@ -189,16 +137,6 @@ function PoolCard({ pool }: { pool: IPool }) {
           </span>
         </div>
 
-        {/* Reward */}
-        <div className="flex items-start justify-between">
-          <span className=" flex items-center gap-2">
-            <RewardIcon />
-            Reward:
-          </span>
-          <span className="text-muted-foreground max-w-[60%] text-right">
-            {demoPools.find((p) => p.id === pool.requiredNftCount)?.reward}
-          </span>
-        </div>
 
         {/* Join pool */}
         <PoolActionButton />
