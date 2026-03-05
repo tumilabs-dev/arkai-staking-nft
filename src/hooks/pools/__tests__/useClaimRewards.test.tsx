@@ -82,7 +82,7 @@ describe("useClaimRewards", () => {
 
     await waitFor(() => {
       expect(mockCustomToast).toHaveBeenCalledWith(
-        "All rewards claimed successfully",
+        "Claim request submitted. Payout processing...",
         "success"
       );
     });

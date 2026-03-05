@@ -220,7 +220,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
               clear();
             }}
           >
-            {isClaimable ? "Claim" : isClaimed ? "Claimed" : "Upcoming"}
+            {isClaimable ? "Claim" : isClaimed ? "Processing" : "Upcoming"}
           </InkButton>
         </div>
       </div>

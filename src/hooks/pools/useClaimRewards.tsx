@@ -32,7 +32,7 @@ export const useClaimRewards = ({ poolId }: { poolId: string }) => {
         queryKey: [endpoint.staking.rewards.getAvailableRewards],
       });
 
-      customToast("All rewards claimed successfully", "success");
+      customToast("Claim request submitted. Payout processing...", "success");
     },
   });
 };
