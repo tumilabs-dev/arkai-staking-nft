@@ -1,5 +1,4 @@
 import BrandLogoFill from "@/assets/brand/brand-filled.png";
-import { Link } from "@tanstack/react-router";
 
 export default function Footer() {
   return (
@@ -17,12 +16,6 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Arkai NFT Staking. All rights
             reserved.
           </p>
-        </div>
-        {/* Navigation */}
-        <div className="flex items-center text-sm gap-4">
-          <Link to="/policy">Privacy Policy</Link>
-          <Link to="/terms">Terms of Service</Link>
-          <Link to="/support">Support</Link>
         </div>
       </div>
     </footer>
