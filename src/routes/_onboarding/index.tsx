@@ -1,7 +1,7 @@
 import BrandLogoWhite from "@/assets/brand/brand-white.png";
 import { ArrowIcon } from "@/components/icons/arrow.icon";
 import InkButton from "@/components/ui/InkButton";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
 import { useRef } from "react";
 export const Route = createFileRoute("/_onboarding/")({
   component: RouteComponent,
@@ -30,10 +30,13 @@ function RouteComponent() {
           </span>
         </div>
         {/* Navigation */}
-        <div className="flex items-center gap-2 cursor-pointer hover:gap-1 transition-all duration-300">
+        <Link
+          to="/rules"
+          className="flex items-center gap-2 cursor-pointer hover:gap-1 transition-all duration-300"
+        >
           <span className="text-white">Staking Rules</span>
           <ArrowIcon className="text-white mb-1.5" />
-        </div>
+        </Link>
       </div>
 
       {/* Contents */}
