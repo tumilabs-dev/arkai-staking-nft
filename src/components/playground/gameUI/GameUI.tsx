@@ -15,7 +15,7 @@ import { parseValueToDisplay } from "@/lib/parseValue";
 import { cn } from "@/lib/utils";
 import { useGSAP } from "@gsap/react";
 import { useRouter } from "@tanstack/react-router";
-import { addDays, formatDistanceToNow } from "date-fns";
+import { addDays, format, formatDistanceToNow } from "date-fns";
 import gsap from "gsap";
 import { useMemo, useRef } from "react";
 import { useRewardVisibilityStore } from "../store/reward.store";
@@ -46,6 +46,8 @@ export default function GameUI({ poolId }: { poolId: string }) {
     }
   );
 
+  const { reward, clear } = useRewardVisibilityStore();
+
   const { mutateAsync: claimRewards } = useClaimRewards({
     poolId,
     onSuccess: clear,
@@ -60,7 +62,6 @@ export default function GameUI({ poolId }: { poolId: string }) {
   const totalPhasesHeld = Math.min(poolReward?.weekHeld ?? 0, TOTAL_PHASES);
   const totalPhases = TOTAL_PHASES;
 
-  const { reward, clear } = useRewardVisibilityStore();
   const isClaimable = reward?.every((reward) => reward.canClaim);
 
   const phaseTokenTotal = useMemo(() => {
@@ -174,6 +175,15 @@ export default function GameUI({ poolId }: { poolId: string }) {
         <div className="el w-[350px]">
           <SpiralPadPattern />
           <div className="bg-white p-4 space-y-2">
+            <div className="flex items-center justify-between">
+              <span>Pool Started:</span>
+              <span>
+                {poolReward?.poolStartedAt
+                  ? format(new Date(poolReward.poolStartedAt), "MMM d, yyyy")
+                  : "—"}
+              </span>
+            </div>
+
             <div className="flex items-center justify-between">
               <span>Total Phases Staked:</span>
               <span>

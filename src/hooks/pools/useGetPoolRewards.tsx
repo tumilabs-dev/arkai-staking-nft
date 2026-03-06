@@ -25,6 +25,7 @@ export interface IPoolReward {
   }[];
   weekHeld: number;
   startedAt: Date;
+  poolStartedAt: Date;
 }
 
 export const useGetPoolRewards = ({ poolId }: { poolId?: string }) => {
