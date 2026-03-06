@@ -6,3 +6,5 @@ count.txt
 .env
 .tanstack
 todos.json
+playwright-report/
+test-results/
