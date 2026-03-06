@@ -12,7 +12,6 @@ import { UserIcon } from "@/components/icons/user.icon";
 import InkButton from "@/components/ui/InkButton";
 import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
 import { rolesMap } from "@/constants/rolesMap";
-import { getPoolTotalReward } from "@/lib/poolTotalRewards";
 import { IPool, useGetStakingPools } from "@/hooks/pools/useGetPools";
 import { useJoinPool } from "@/hooks/pools/useJoinPool";
 import { resolveAsset } from "@/lib/resolveAsset";
@@ -23,6 +22,13 @@ import { useState } from "react";
 export const Route = createFileRoute("/_app/pool/")({
   component: RouteComponent,
 });
+
+function formatRewardTokens(value: string): string {
+  const n = Number(value);
+  if (n >= 1_000_000) return `${n / 1_000_000}M`;
+  if (n >= 1_000) return `${n / 1_000}K`;
+  return n.toLocaleString();
+}
 
 
 function RouteComponent() {
@@ -144,7 +150,7 @@ function PoolCard({ pool }: { pool: IPool }) {
             Total Reward:
           </span>
           <span className="text-muted-foreground max-w-[60%] text-right">
-            {getPoolTotalReward(pool.requiredNftCount)} $MOVERZ
+            {formatRewardTokens(pool.totalRewardTokens)} $MOVERZ
           </span>
         </div>
 

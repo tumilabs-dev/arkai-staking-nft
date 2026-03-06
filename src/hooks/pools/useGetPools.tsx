@@ -13,6 +13,7 @@ export interface IPool {
   canJoin: true;
   isJoined: boolean;
   resourceUrl: string;
+  totalRewardTokens: string;
 }
 
 export const useGetStakingPools = () => {
