@@ -198,7 +198,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
         )}
       >
         <div
-          className="w-full h-auto aspect-510/322 flex flex-col items-center justify-between px-4 pt-6 pb-12 relative"
+          className="w-full h-auto aspect-510/322 flex flex-col items-center justify-between px-4 pt-12 pb-12 relative"
           style={{
             backgroundImage: `url(${ScrollBg})`,
             backgroundSize: "cover",
@@ -206,12 +206,14 @@ export default function GameUI({ poolId }: { poolId: string }) {
             backgroundRepeat: "no-repeat",
           }}
         >
+          <span>Total Share</span>
           {phaseTokenTotal > 0 && (
             <div className="flex items-center justify-between text-lg ">
               <span className="mr-2">
                 {parseValueToDisplay(phaseTokenTotal).toLocaleString()}
               </span>
               <span className="text-primary-500 font-semibold">$MOVERZ</span>
+
             </div>
           )}
 
