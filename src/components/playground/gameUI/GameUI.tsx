@@ -48,6 +48,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
 
   const { mutateAsync: claimRewards } = useClaimRewards({
     poolId,
+    onSuccess: clear,
   });
 
   const { data: currentPool } = useGetCurrentPool();
@@ -251,7 +252,6 @@ export default function GameUI({ poolId }: { poolId: string }) {
             className="p-3 text-xl text-primary-500 hover:text-primary-900 hover:brightness-150 transition-all duration-300"
             onClick={() => {
               claimRewards();
-              clear();
             }}
           >
             {isClaimable ? "Claim" : isClaimed ? "Processing" : "Upcoming"}
@@ -265,7 +265,6 @@ export default function GameUI({ poolId }: { poolId: string }) {
           fillColor="#50352C"
           onClick={() => {
             claimRewards();
-            clear();
           }}
         >
           Claim all gifts

@@ -5,7 +5,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useTokenManager } from "../authentication/useTokenManager";
 
-export const useClaimRewards = ({ poolId }: { poolId: string }) => {
+export const useClaimRewards = ({
+  poolId,
+  onSuccess,
+}: {
+  poolId: string;
+  onSuccess?: () => void;
+}) => {
   const { headerBuilder, AuthenticationErrorHandler } = useTokenManager();
   const queryClient = useQueryClient();
   return useMutation({
@@ -22,7 +28,17 @@ export const useClaimRewards = ({ poolId }: { poolId: string }) => {
       return response.data;
     },
     onError: (error) => {
-      AuthenticationErrorHandler(error as AxiosError);
+      const axiosError = error as AxiosError<{ message?: string }>;
+      if (axiosError.response?.status === 401) {
+        AuthenticationErrorHandler(axiosError);
+      } else {
+        customToast(
+          axiosError.response?.data?.message ??
+            axiosError.message ??
+            "Claim failed. Please try again.",
+          "error"
+        );
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -33,6 +49,7 @@ export const useClaimRewards = ({ poolId }: { poolId: string }) => {
       });
 
       customToast("Claim request submitted. Payout processing...", "success");
+      onSuccess?.();
     },
   });
 };
