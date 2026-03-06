@@ -15,12 +15,15 @@ import { parseValueToDisplay } from "@/lib/parseValue";
 import { cn } from "@/lib/utils";
 import { useGSAP } from "@gsap/react";
 import { useRouter } from "@tanstack/react-router";
-import { formatDistanceToNow, sub } from "date-fns";
+import { addDays, formatDistanceToNow } from "date-fns";
 import gsap from "gsap";
 import { useMemo, useRef } from "react";
 import { useRewardVisibilityStore } from "../store/reward.store";
 
 export default function GameUI({ poolId }: { poolId: string }) {
+  const PHASE_DAYS = 5;
+  const TOTAL_PHASES = 6;
+
   const router = useRouter();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,15 +56,44 @@ export default function GameUI({ poolId }: { poolId: string }) {
     poolId: currentPool?.poolId,
   });
 
-  const totalWeeksHolded = poolReward?.weekHeld ?? 0;
-  const totalWeeks = poolReward?.rewards?.at(-1)?.weekNumber ?? 0;
+  const totalPhasesHeld = Math.min(poolReward?.weekHeld ?? 0, TOTAL_PHASES);
+  const totalPhases = TOTAL_PHASES;
 
   const { reward, clear } = useRewardVisibilityStore();
   const isClaimable = reward?.every((reward) => reward.canClaim);
 
+  const phaseTokenTotal = useMemo(() => {
+    if (!reward?.length) {
+      return 0;
+    }
+
+    return reward
+      .filter((item) => item.rewardType === ERewardType.TOKEN)
+      .reduce((total, item) => total + Number(item.rewardValue ?? 0), 0);
+  }, [reward]);
+
+  const phaseRoleRewards = useMemo(() => {
+    if (!reward?.length) {
+      return [];
+    }
+
+    return reward.filter((item) => item.rewardType === ERewardType.ROLE);
+  }, [reward]);
+
+  const phaseOtherRewards = useMemo(() => {
+    if (!reward?.length) {
+      return [];
+    }
+
+    return reward.filter(
+      (item) =>
+        item.rewardType !== ERewardType.TOKEN && item.rewardType !== ERewardType.ROLE
+    );
+  }, [reward]);
+
   const isClaimed =
     !isClaimable &&
-    reward?.every((reward) => reward?.weekNumber <= totalWeeksHolded);
+    reward?.every((reward) => reward?.weekNumber <= totalPhasesHeld);
 
   const safeCurrentPoint = useMemo(() => {
     if (!poolReward?.rewards?.length) return 0;
@@ -73,21 +105,24 @@ export default function GameUI({ poolId }: { poolId: string }) {
         continue;
     }
     return poolReward?.rewards?.length - 1;
-  }, [poolReward?.rewards?.length, poolReward?.weekHeld]);
+  }, [poolReward?.rewards, poolReward?.weekHeld]);
 
   const remainingTime = useMemo(() => {
-    if (
-      !poolReward?.startedAt ||
-      safeCurrentPoint === -1 ||
-      safeCurrentPoint === poolReward?.rewards?.length - 1
-    )
+    if (!poolReward?.startedAt || safeCurrentPoint === -1) {
       return "End reached!";
-    const nextTime = sub(poolReward?.startedAt, {
-      weeks: poolReward?.rewards?.[safeCurrentPoint + 1]?.weekNumber ?? 0,
-    });
+    }
+
+    if (totalPhasesHeld >= TOTAL_PHASES) {
+      return "End reached!";
+    }
+
+    const nextTime = addDays(
+      new Date(poolReward.startedAt),
+      (totalPhasesHeld + 1) * PHASE_DAYS
+    );
 
     return formatDistanceToNow(nextTime);
-  }, [poolReward?.startedAt]);
+  }, [poolReward?.startedAt, safeCurrentPoint, totalPhasesHeld]);
 
   const tresureChestRef = useRef<HTMLDivElement>(null);
 
@@ -121,7 +156,7 @@ export default function GameUI({ poolId }: { poolId: string }) {
         <div className="relative el w-[200px] flex flex-col items-center justify-center mt-28">
           <img
             src={resolveAsset(currentPool?.pool?.resourceUrl ?? "")}
-            alt="Pool Image"
+            alt="Pool artwork"
             className="w-[80%] object-contain absolute -top-[40%] left-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
           />
           <img
@@ -139,10 +174,10 @@ export default function GameUI({ poolId }: { poolId: string }) {
           <SpiralPadPattern />
           <div className="bg-white p-4 space-y-2">
             <div className="flex items-center justify-between">
-              <span>Total Weeks Staked:</span>
+              <span>Total Phases Staked:</span>
               <span>
-                {Math.min(totalWeeksHolded, totalWeeks)?.toLocaleString()} /{" "}
-                {totalWeeks?.toLocaleString()}
+                {Math.min(totalPhasesHeld, totalPhases)?.toLocaleString()} /{" "}
+                {totalPhases?.toLocaleString()}
               </span>
             </div>
 
@@ -171,29 +206,26 @@ export default function GameUI({ poolId }: { poolId: string }) {
             backgroundRepeat: "no-repeat",
           }}
         >
-          {reward?.map((reward) => (
-            <div
-              key={reward.id}
-              className="flex items-center justify-between text-lg "
-            >
+          {phaseTokenTotal > 0 && (
+            <div className="flex items-center justify-between text-lg ">
               <span className="mr-2">
-                {reward.rewardType === ERewardType.TOKEN
-                  ? parseValueToDisplay(reward.rewardValue)
-                  : reward.rewardType === ERewardType.NFT
-                  ? reward.rewardName
-                  : reward.rewardType === ERewardType.ROLE
-                  ? reward.rewardName
-                  : reward.rewardValue.toLocaleString()}
+                {parseValueToDisplay(phaseTokenTotal).toLocaleString()}
               </span>
-              <span className="text-primary-500 font-semibold">
-                {reward.rewardType === ERewardType.TOKEN
-                  ? "$" + reward.rewardName
-                  : reward.rewardType === ERewardType.NFT
-                  ? reward.rewardName
-                  : reward.rewardType === ERewardType.ROLE
-                  ? "Role"
-                  : reward.rewardValue.toLocaleString()}
-              </span>
+              <span className="text-primary-500 font-semibold">$MOVERZ</span>
+            </div>
+          )}
+
+          {phaseRoleRewards.map((item) => (
+            <div key={item.id} className="flex items-center justify-between text-lg ">
+              <span className="mr-2">{item.rewardName}</span>
+              <span className="text-primary-500 font-semibold">Role</span>
+            </div>
+          ))}
+
+          {phaseOtherRewards.map((item) => (
+            <div key={item.id} className="flex items-center justify-between text-lg ">
+              <span className="mr-2">{item.rewardName ?? Number(item.rewardValue).toLocaleString()}</span>
+              <span className="text-primary-500 font-semibold">{item.rewardType}</span>
             </div>
           ))}
 

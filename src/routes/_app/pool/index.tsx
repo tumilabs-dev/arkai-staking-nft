@@ -12,6 +12,7 @@ import { UserIcon } from "@/components/icons/user.icon";
 import InkButton from "@/components/ui/InkButton";
 import SpiralPadPattern from "@/components/ui/SpiralPadPattern";
 import { rolesMap } from "@/constants/rolesMap";
+import { getPoolTotalReward } from "@/lib/poolTotalRewards";
 import { IPool, useGetStakingPools } from "@/hooks/pools/useGetPools";
 import { useJoinPool } from "@/hooks/pools/useJoinPool";
 import { resolveAsset } from "@/lib/resolveAsset";
@@ -134,6 +135,16 @@ function PoolCard({ pool }: { pool: IPool }) {
                 pool.requiredNftCount.toString() as keyof typeof rolesMap
               ]
             }
+          </span>
+        </div>
+        {/* Total Reward */}
+        <div className="flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <RewardIcon />
+            Total Reward:
+          </span>
+          <span className="text-muted-foreground max-w-[60%] text-right">
+            {getPoolTotalReward(pool.requiredNftCount)} $MOVERZ
           </span>
         </div>
 

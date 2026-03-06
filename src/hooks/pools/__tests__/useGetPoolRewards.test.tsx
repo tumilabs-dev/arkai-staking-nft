@@ -35,7 +35,7 @@ const mockRewardData: IPoolReward = {
       weekNumber: 1,
       rewardType: ERewardType.TOKEN,
       rewardValue: 100,
-      rewardName: "MOVE Token",
+      rewardName: "MOVERZ Token",
       canClaim: true,
     },
   ],

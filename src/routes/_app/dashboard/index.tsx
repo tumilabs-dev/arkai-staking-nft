@@ -23,13 +23,16 @@ import { parseValueToDisplay } from "@/lib/parseValue";
 import { resolveAsset } from "@/lib/resolveAsset";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ShieldCheck, Sword } from "lucide-react";
-import { addWeeks, formatDistanceToNow, isPast } from "date-fns";
+import { addDays, formatDistanceToNow, isPast } from "date-fns";
 
 export const Route = createFileRoute("/_app/dashboard/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const PHASE_DAYS = 5;
+  const TOTAL_PHASES = 6;
+
   const navigate = useNavigate();
   const { data: currentPool } = useGetCurrentPool();
 
@@ -39,9 +42,9 @@ function RouteComponent() {
 
   const { data: balance } = useGetNFTBalance();
 
-  const currentWeek = poolRewards?.weekHeld ?? 0;
-  const maxWeeks = poolRewards?.rewards.at(-1)?.weekNumber ?? 0;
-  const progress = (Math.min(currentWeek, maxWeeks) / maxWeeks) * 100;
+  const currentPhase = Math.min(poolRewards?.weekHeld ?? 0, TOTAL_PHASES);
+  const maxPhases = TOTAL_PHASES;
+  const progress = maxPhases > 0 ? (Math.min(currentPhase, maxPhases) / maxPhases) * 100 : 0;
 
   const getTotalRewardByType = (type: ERewardType, name?: string) => {
     return (
@@ -134,9 +137,10 @@ function RouteComponent() {
 
               {/* Current pools information */}
               <div className="gap-4 relative size-52">
-                <img src={Stamp} className="size-full object-cover" />
+                <img src={Stamp} alt="Stamp frame" className="size-full object-cover" />
                 <img
                   src={resolveAsset(currentPool?.pool.resourceUrl ?? "")}
+                  alt={currentPool?.pool.name ?? "Pool artwork"}
                   loading="eager"
                   className="size-[78%] object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
                 />
@@ -149,11 +153,11 @@ function RouteComponent() {
                 Your Staking Journey
               </h2>
               <div className="flex items-center gap-4 text-xl justify-between ">
-                <span>Weeks Staked: </span>
-                <span className="text-accent font-medium">
-                  {Math.min(currentWeek, maxWeeks)} / {maxWeeks}
-                </span>
-              </div>
+                  <span>Phases Staked: </span>
+                  <span className="text-accent font-medium">
+                  {Math.min(currentPhase, maxPhases)} / {maxPhases}
+                  </span>
+                </div>
               <Progress value={progress}>
                 <ProgressTrack className={"h-4"} />
               </Progress>
@@ -162,7 +166,7 @@ function RouteComponent() {
                 Keep staking to unlock maximum potential rewards!
               </div>
 
-              {currentWeek >= maxWeeks && (
+              {currentPhase >= maxPhases && (
                 <div className="text-accent font-medium text-center">
                   Maximum reached, switch to a new pool to continue staking!
                 </div>
@@ -175,10 +179,10 @@ function RouteComponent() {
                 <TimerIcon className="text-accent" />
                 <span className="text-2xl font-medium">Campaign Ends In</span>
                 <span className="flex items-center gap-2 text-xl text-accent">
-                  {poolRewards?.startedAt && maxWeeks > 0
-                    ? isPast(addWeeks(new Date(poolRewards.startedAt), maxWeeks))
+                  {poolRewards?.startedAt
+                    ? isPast(addDays(new Date(poolRewards.startedAt), TOTAL_PHASES * PHASE_DAYS))
                       ? "Campaign ended"
-                      : formatDistanceToNow(addWeeks(new Date(poolRewards.startedAt), maxWeeks), { addSuffix: false })
+                      : formatDistanceToNow(addDays(new Date(poolRewards.startedAt), TOTAL_PHASES * PHASE_DAYS), { addSuffix: false })
                     : "-"}
                 </span>
                 <span className="text-center w-full text-muted-foreground">
@@ -196,11 +200,11 @@ function RouteComponent() {
               <div className="flex items-center gap-4 text-xl justify-between ">
                 <span>
                   <DiamondIcon className="text-accent inline mr-2" />
-                  Move Tokens
+                  MOVERZ Tokens
                 </span>
                 <span className="text-accent font-medium">
                   {parseValueToDisplay(getTotalRewardByType(ERewardType.TOKEN))}{" "}
-                  $MOVE
+                  $MOVERZ
                 </span>
               </div>
               <div className="flex items-center gap-4 text-xl justify-between ">

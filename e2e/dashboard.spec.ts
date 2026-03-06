@@ -42,8 +42,8 @@ test.describe("Dashboard Page", () => {
 
     test("shows weeks staked progress", async ({ page }) => {
       await page.goto("/dashboard");
-      // weekHeld: 2, requiredWeeks: 4 — rendered as a "2 / 4" span
-      await expect(page.getByText("2 / 4")).toBeVisible();
+      // weekHeld: 2, requiredWeeks: 4 — rendered as a "2 / 6" span
+      await expect(page.getByText("2 / 6")).toBeVisible();
     });
 
     test("shows pool rewards section", async ({ page }) => {

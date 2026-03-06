@@ -43,9 +43,9 @@ test.describe("My Pool Page (Pixi.js Game)", () => {
 
   test("shows total weeks staked progress", async ({ page }) => {
     await page.goto("/pool/my-pool");
-    // weekHeld: 2, requiredWeeks: 4 — rendered as "Total Weeks Staked:" label + "2 / 4" value
-    await expect(page.getByText("Total Weeks Staked:")).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText("2 / 4")).toBeVisible({ timeout: 10000 });
+    // weekHeld: 2, requiredWeeks: 4 — rendered as "Total Phases Staked:" label + "2 / 6" value
+    await expect(page.getByText("Total Phases Staked:")).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText("2 / 6")).toBeVisible({ timeout: 10000 });
   });
 
   test("back button is visible and navigates away", async ({ page }) => {

@@ -375,6 +375,8 @@ async function drawDashedLine(
 }
 
 export default function Checkpoint({ poolId }: { poolId: string }) {
+  const TOTAL_PHASES = 6;
+
   const { data: mapData } = useGetMap(poolId);
   // Parse the SVG path from Checkpoint_Path
   const pathPoints = parseSvgPath(mapData?.checkpoint?.path ?? "", 20);
@@ -388,14 +390,12 @@ export default function Checkpoint({ poolId }: { poolId: string }) {
     });
 
   // Calculate checkpoint positions dynamically based on the path
-  const allWeeks = Array.from(
-    new Set(poolReward?.rewards?.map((reward) => reward.weekNumber))
-  );
+  const allWeeks = Array.from({ length: TOTAL_PHASES }, (_, i) => i + 1);
 
   const checkpoint_positions = calculateCheckpointPositions(
     pathPoints,
     FIRST_CHECKPOINT_POSITION,
-    allWeeks.length ?? 0
+    TOTAL_PHASES
   );
 
   // Ensure currentPoint is within valid bounds
@@ -476,9 +476,9 @@ export default function Checkpoint({ poolId }: { poolId: string }) {
       {mapData?.checkpoint?.assets &&
         checkpoint_positions.map((position, index) => (
           <CheckpointItem
-            key={`Position-${index}`}
+            key={`Position-${allWeeks[index]}`}
             assets={mapData?.checkpoint?.assets}
-            canClaim={safeCurrentPoint >= index}
+            canClaim={(poolReward?.weekHeld ?? 0) >= allWeeks[index]}
             position={position}
             isCurrentPoint={index === safeCurrentPoint}
             rewards={
@@ -514,10 +514,19 @@ export function CheckpointItem({
   const indicatorAsset = resolveAsset(assets?.indicator);
 
   const { setReward, clear, id: storeId } = useRewardVisibilityStore();
+  const hasRewards = !!rewards?.length;
 
-  if (!rewards || !rewards?.length) {
-    return null;
-  }
+  const handleClick = () => {
+    clear();
+    if (!hasRewards) {
+      return;
+    }
+    if (id === storeId) {
+      clear();
+      return;
+    }
+    setReward(rewards, id, position);
+  };
 
   return (
     <>
@@ -528,11 +537,7 @@ export function CheckpointItem({
         x={position.x}
         y={position.y}
         zIndex={LayerPositions.GROUND}
-        onClick={() => {
-          clear();
-          if (id === storeId) clear();
-          else setReward(rewards, id, position);
-        }}
+        onClick={handleClick}
         initAnimation={(timeline, sprite, onComplete) =>
           particleEntryAnimation(timeline, sprite, onComplete)
         }
@@ -548,11 +553,7 @@ export function CheckpointItem({
             particleEntryAnimation(timeline, sprite, onComplete)
           }
           anchor={{ x: 0.5, y: 0.5 }}
-          onClick={() => {
-            clear();
-            if (id === storeId) clear();
-            else setReward(rewards, id, position);
-          }}
+          onClick={handleClick}
         />
       )}
     </>
